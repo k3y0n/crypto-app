@@ -1,4 +1,5 @@
 export interface ButtonProps {
-  label: string;
   onClick: () => void;
+  label?: string | number;
+  className?: string;
 }

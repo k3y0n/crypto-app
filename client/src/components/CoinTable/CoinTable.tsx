@@ -1,24 +1,16 @@
 import Badge from "../../ui/Badge/Badge";
 import Button from "../../ui/Button/Button";
+import TableHeader from "../TableHeader/TableHeader";
 import styles from "./CoinTable.module.css";
 import { CoinTableProps } from "./CoinTableProps";
 
-const CoinTable: React.FC<CoinTableProps> = ({ coins }) => {
+const CoinTable: React.FC<CoinTableProps> = ({ coins, headers, setSort }) => {
   const handleClick = () => {
     console.log(`This coin add to your portfolio`);
   };
   return (
     <table className={styles.coinTable}>
-      <thead>
-        <tr>
-          <th>Symbol</th>
-          <th>Logo</th>
-          <th>Price (USD)</th>
-          <th>Market Cap</th>
-          <th>Change (24h)</th>
-          <th>Action</th>
-        </tr>
-      </thead>
+      <TableHeader headers={headers} onSort={setSort} />
       <tbody>
         {coins.map((coin) => (
           <tr key={coin.id}>
@@ -26,8 +18,8 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins }) => {
             <td>
               <img src={coin.logo} alt={coin.name} />
             </td>
-            <td>{coin.price}</td>
-            <td>{coin.marketCap}</td>
+            <td>{coin.price}$</td>
+            <td>{coin.marketCap}$</td>
             <td>
               {
                 <Badge
@@ -37,7 +29,11 @@ const CoinTable: React.FC<CoinTableProps> = ({ coins }) => {
               }
             </td>
             <td>
-              <Button label={"Add"} onClick={handleClick} />
+              <Button
+                label={"Add"}
+                onClick={handleClick}
+                className={"button-add"}
+              />
             </td>
           </tr>
         ))}

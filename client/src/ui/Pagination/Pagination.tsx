@@ -1,17 +1,20 @@
 import React from "react";
 import styles from "./Pagination.module.css";
 import { PaginationProps } from "./PaginationProps";
+import Button from "../Button/Button";
 
-
-
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <ul className={styles.pagination}>
       {pages.map((page) => (
         <li key={page} className={page === currentPage ? styles.active : ""}>
-          <button onClick={() => onPageChange(page)}>{page}</button>
+          <Button onClick={() => onPageChange(page)} label={page} />
         </li>
       ))}
     </ul>
