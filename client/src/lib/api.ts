@@ -1,13 +1,12 @@
 import axios from "axios";
 
-export const getTokens = async (start: number, sort: string) => {
+export const getTokens = async () => {
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/coinmarketcap?start=${start}&sort=${sort}`
-    );
+    const response = await axios.get(`http://localhost:3000/api/coinmarketcap`);
     const { data } = response;
     return data;
   } catch (error) {
-    throw new Error(error.message);
+    const err = new Error();
+    throw new Error(err.message);
   }
 };

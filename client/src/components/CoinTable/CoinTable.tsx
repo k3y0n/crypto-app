@@ -4,13 +4,22 @@ import TableHeader from "../TableHeader/TableHeader";
 import styles from "./CoinTable.module.css";
 import { CoinTableProps } from "./CoinTableProps";
 
-const CoinTable: React.FC<CoinTableProps> = ({ coins, headers, setSort }) => {
+const CoinTable: React.FC<CoinTableProps> = ({
+  coins,
+  headers,
+  handleSort,
+  sortSettings,
+}) => {
   const handleClick = () => {
     console.log(`This coin add to your portfolio`);
   };
   return (
     <table className={styles.coinTable}>
-      <TableHeader headers={headers} onSort={setSort} />
+      <TableHeader
+        headers={headers}
+        handleSort={handleSort}
+        sortSettings={sortSettings}
+      />
       <tbody>
         {coins.map((coin) => (
           <tr key={coin.id}>

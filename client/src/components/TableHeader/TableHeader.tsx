@@ -1,25 +1,37 @@
 import React from "react";
-import styles from "./TableHeader.module.css";
 import { TableHeaderProps } from "./TableHeaderProps";
 import { Caret } from "../../ui/Caret/Caret";
 
-const TableHeader: React.FC<TableHeaderProps> = ({ headers, onSort }) => {
-  const handleSort = (key: string) => {
-    if (key !== "logo" && key !== "action") {
-      onSort(key);
-    }
-  };
+const TableHeader: React.FC<TableHeaderProps> = ({
+  headers,
+  handleSort,
+  sortSettings,
+}) => {
   return (
     <thead>
       <tr>
-        {headers.map((header) => (
-          <th key={header.key} onClick={() => handleSort(header.key)}>
-            {header.label}
-            {header.key !== "logo" && header.key !== "action" ? (
-              <Caret />
-            ) : null}
-          </th>
-        ))}
+        {headers.map((item) => {
+          const isActive = sortSettings.column === item.key;
+          const isClickable =
+            item.key !== "actions" &&
+            item.key !== "symbol" &&
+            item.key !== "logo";
+
+          const handleSortClick = () => {
+            if (isClickable) {
+              handleSort(item.key);
+            }
+          };
+
+          return (
+            <td key={item.key} onClick={handleSortClick}>
+              {item.label}
+              {isActive && isClickable && (
+                <Caret direction={sortSettings.direction} active={true} />
+              )}
+            </td>
+          );
+        })}
       </tr>
     </thead>
   );

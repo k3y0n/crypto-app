@@ -1,4 +1,7 @@
+import { SortSettings } from "../../types/sort";
+
 export interface TableHeaderProps {
   headers: { key: string; label: string }[];
-  onSort: (key: string) => void;
+  handleSort: (column: string) => void;
+  sortSettings: SortSettings;
 }

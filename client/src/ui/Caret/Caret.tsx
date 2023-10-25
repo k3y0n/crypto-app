@@ -1,5 +1,9 @@
-import { CaretUpFill } from "react-bootstrap-icons";
+import { CaretUpFill, CaretDownFill } from "react-bootstrap-icons";
 
-export const Caret: React.FC = () => {
-  return <CaretUpFill/>;
+interface CaretProps {
+  direction: "asc" | "desc";
+  active: boolean;
+}
+export const Caret: React.FC<CaretProps> = ({ direction, active }) => {
+  return active && (direction === "asc" ? <CaretUpFill /> : <CaretDownFill />);
 };
