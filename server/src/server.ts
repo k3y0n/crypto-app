@@ -56,6 +56,9 @@ app.get("/api/coinmarketcap", async (req: Request, res: Response) => {
       price: coin.quote.USD.price.toFixed(2),
       percentChange24h: coin.quote.USD.percent_change_24h.toFixed(2),
       marketCap: coin.quote.USD.market_cap.toFixed(2),
+      maxSupply: coin.max_supply.toFixed(2),
+      rank:coin.cmc_rank,
+      totalSupply:coin.total_supply,
     }));
 
     res.json(formattedData);

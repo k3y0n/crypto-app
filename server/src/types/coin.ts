@@ -3,6 +3,9 @@ interface Coin {
     name: string;
     symbol: string;
     logo:string,
+    max_supply:number,
+    cmc_rank:number,
+    total_supply:number,
     quote:{
       USD:{
         price:number,

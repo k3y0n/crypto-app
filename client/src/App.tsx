@@ -2,13 +2,13 @@ import "./App.css";
 import { useQuery } from "react-query";
 import { Routes, Route } from "react-router-dom";
 import Coin from "./types/coin";
-import { getTokens } from "./lib/api";
+import { getCoins } from "./lib/api";
 import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
 import CoinInfo from "./pages/CoinInfo/CoinInfo";
 
 function App() {
-  const coinsQuery = useQuery("tokens", getTokens);
+  const coinsQuery = useQuery("tokens", getCoins);
 
   const coins: Coin[] = coinsQuery.data || [];
 
