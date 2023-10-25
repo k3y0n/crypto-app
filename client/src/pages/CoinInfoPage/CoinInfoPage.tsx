@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getCoin } from "../../lib/api";
 
-const CoinInfo = () => {
+const CoinInfoPage = () => {
   const { id } = useParams(); 
 
   const coin = {
@@ -27,4 +27,4 @@ const CoinInfo = () => {
   );
 };
 
-export default CoinInfo;
+export default CoinInfoPage;

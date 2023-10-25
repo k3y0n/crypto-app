@@ -5,7 +5,7 @@ import Coin from "./types/coin";
 import { getCoins } from "./lib/api";
 import Home from "./pages/Home/Home";
 import NotFound from "./pages/NotFound/NotFound";
-import CoinInfo from "./pages/CoinInfo/CoinInfo";
+import CoinInfoPage from "./pages/CoinInfoPage/CoinInfoPage";
 
 function App() {
   const coinsQuery = useQuery("tokens", getCoins);
@@ -24,7 +24,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home coins={coins} />} />
-        <Route path="/CoinInfo/:id" element={<CoinInfo />} />
+        <Route path="/CoinInfoPage/:id" element={<CoinInfoPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
