@@ -1,4 +1,4 @@
-import Coin from "../../types/coin";
+import {Coin} from "../../types/coin";
 import { SortSettings } from "../../types/sort";
 
 export interface CoinTableProps {

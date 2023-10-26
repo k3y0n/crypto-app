@@ -8,37 +8,40 @@ import { useNavigate } from "react-router-dom";
 const CoinTable: React.FC<CoinTableProps> = ({
   coins,
   headers,
-  handleSort,
   sortSettings,
+  handleSort,
 }) => {
   const navigate = useNavigate();
+
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); 
+    e.stopPropagation();
     console.log(`This coin add to your portfolio`);
   };
-  const handleClick = (symbol: string) => {
-    navigate(`/CoinInfoPage/${symbol}`);
+
+  const handleClick = (id: string) => {
+    navigate(`/coinInfoPage/${id}`);
   };
+
   return (
     <table className={styles.coinTable}>
       <TableHeader
         headers={headers}
-        handleSort={handleSort}
         sortSettings={sortSettings}
+        handleSort={handleSort}
       />
       <tbody>
         {coins.map((coin) => (
-          <tr key={coin.id} onClick={() => handleClick(coin.symbol)}>
-            <td>{coin.symbol}</td>
+          <tr key={coin.id} onClick={() => handleClick(coin.id)}>
+            <td>{coin.symbol.toLocaleUpperCase()}</td>
             <td>
-              <img src={coin.logo} alt={coin.name} />
+              <img src={coin.image} alt={coin.name} />
             </td>
-            <td>{coin.price}$</td>
-            <td>{coin.marketCap}$</td>
+            <td>{coin.current_price}$</td>
+            <td>{coin.market_cap}$</td>
             <td>
               <Badge
-                value={coin.percentChange24h}
-                color={coin.percentChange24h > 0 ? "green" : "red"}
+                value={Number(coin.price_change_percentage_24h.toFixed(2))}
+                color={coin.price_change_percentage_24h > 0 ? "green" : "red"}
               />
             </td>
             <td>

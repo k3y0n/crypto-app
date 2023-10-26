@@ -4,8 +4,8 @@ import { Caret } from "../../ui/Caret/Caret";
 
 const TableHeader: React.FC<TableHeaderProps> = ({
   headers,
-  handleSort,
   sortSettings,
+  handleSort,
 }) => {
   return (
     <thead>

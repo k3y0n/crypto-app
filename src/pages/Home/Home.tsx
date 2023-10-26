@@ -3,34 +3,19 @@ import CoinTable from "../../components/CoinTable/CoinTable";
 import Header from "../../components/Header/Header";
 import Pagination from "../../ui/Pagination/Pagination";
 import { calculateTotalPages, getPageSlice } from "../../utils/pagination";
-import Coin from "../../types/coin";
-import { SortSettings } from "../../types/sort";
+import { Coin } from "../../types/coin";
 import _ from "lodash";
+import { HomeProps } from "./HomeProps";
 
-interface HomeProps {
-  coins: Coin[];
-}
-
-const Home: React.FC<HomeProps> = ({ coins }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+const Home: React.FC<HomeProps> = ({
+  coins,
+  currentPage,
+  sortSettings,
+  handleSort,
+  setCurrentPage,
+}) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState<Coin[]>([]);
-  const [sortSettings, setSortSettings] = useState<SortSettings>({
-    column: null,
-    direction: "asc",
-  });
-
-  const handleSort = (column: string) => {
-    setSortSettings((prevSettings) => {
-      if (column === prevSettings.column) {
-        return {
-          ...prevSettings,
-          direction: prevSettings.direction === "asc" ? "desc" : "asc",
-        };
-      }
-      return { ...prevSettings, column };
-    });
-  };
 
   const handleSearch = (search: string) => {
     setSearch(search);
@@ -47,9 +32,9 @@ const Home: React.FC<HomeProps> = ({ coins }) => {
   const headers = [
     { key: "symbol", label: "Symbol" },
     { key: "logo", label: "Logo" },
-    { key: "price", label: "Price (USD)" },
-    { key: "marketCap", label: "Market Cap" },
-    { key: "percentChange24h", label: "Percent Change 24h" },
+    { key: "current_price", label: "Price (USD)" },
+    { key: "market_cap", label: "Market Cap" },
+    { key: "price_change_percentage_24h", label: "Percent Change 24h" },
     { key: "actions", label: "Actions" },
   ];
 
