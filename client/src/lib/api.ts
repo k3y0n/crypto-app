@@ -11,9 +11,30 @@ export const getCoins = async () => {
   }
 };
 
-export const getCoin = async (id:number) => {
+export const getCoin = async (symbol: string) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/coinmarketcap`);
+    if (symbol === "") {
+      throw new Error("Coin not found");
+    }
+    const response = await axios.get(
+      `http://localhost:3000/api/coin/${symbol}`
+    );
+    const { data } = response;
+    return data;
+  } catch (error) {
+    const err = new Error();
+    throw new Error(err.message);
+  }
+};
+
+export const getCoinChart = async (symbol: string) => {
+  try {
+    if (symbol === "") {
+      throw new Error("Coin not found");
+    }
+    const response = await axios.get(
+      `http://localhost:3000/api/coin/chart/${symbol}`
+    );
     const { data } = response;
     return data;
   } catch (error) {

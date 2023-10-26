@@ -6,6 +6,9 @@ interface Coin {
   price: number;
   percentChange24h: number;
   marketCap: number;
+  maxSupply?: number;
+  rank?: number;
+  totalSupply?: number;
 }
 
 export default Coin;
