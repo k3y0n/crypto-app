@@ -10,6 +10,9 @@ import { SortSettings } from "./types/sort";
 import CoinInfoPage from "./pages/CoinInfoPage/CoinInfoPage";
 
 function App() {
+  const coinsQuery = useQuery("coins", () =>
+    getCoins(sortSettings.column, sortSettings.direction, 1)
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [sortSettings, setSortSettings] = useState<SortSettings>({
     column: "market_cap",
@@ -28,19 +31,19 @@ function App() {
     });
   };
 
-  const coinsQuery = useQuery("coins", () =>
-    getCoins(sortSettings.column, sortSettings.direction, 1)
-  );
+  if (coinsQuery.data && !coinsQuery.data.length) {
+    return <div>Some error to get coins</div>;
+  }
 
-  const coins: Coin[] = coinsQuery.data ?? [];
-
-  if (coinsQuery.isLoading) {
+  if (coinsQuery.isLoading || coinsQuery.isFetching) {
     return <div>Loading...</div>;
   }
 
-  if (coinsQuery.isError && coinsQuery.error instanceof Error) {
-    return <div>Error: {coinsQuery.error?.message}</div>;
+  if (coinsQuery.isError) {
+    return <div>Error fetching data</div>;
   }
+
+  const coins: Coin[] = coinsQuery.data!;
 
   return (
     <>
@@ -58,7 +61,6 @@ function App() {
           }
         />
         <Route path="/coinInfoPage/:id" element={<CoinInfoPage />} />
-
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

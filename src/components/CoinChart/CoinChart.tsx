@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,12 +10,26 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import type { ChartData,ChartOptions  } from "chart.js";
+import { CoinChartData } from "../../types/chart";
+import moment from "moment";
 import { CoinChartProps } from "./CoinChartProps";
 
-const CoinChart: React.FC<CoinChartProps> = ({ data }) => {
-  console.log(data.Data.Data);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-  const options = {
+
+
+const CoinChart: React.FC<CoinChartProps> = ({ coinChart, onSetDay }) => {
+  const [data, setData] = useState<ChartData<"line">>();
+  const [options, setOptions] = useState<ChartOptions<"line">>({
     responsive: true,
     plugins: {
       legend: {
@@ -26,31 +40,66 @@ const CoinChart: React.FC<CoinChartProps> = ({ data }) => {
         text: "Chart.js Line Chart",
       },
     },
-  };
+  });
 
-  const dataChart = {
-    labels: data.Data.Data.map((chartData) => chartData.time),
-    datasets: [
-      {
-        label: "Open",
-        data: data.Data.Data.map((chartData) => chartData.open),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Close",
-        data: data.Data.Data.map((chartData) => chartData.close),
-        borderColor: "rgb(54, 162, 235)",
-        backgroundColor: "rgba(54, 162, 235, 0.5)",
-      },
-    ],
-  };
+  useEffect(() => {
+  console.log(coinChart);
 
-  return (
-    <div>
-      <Line options={options} data={dataChart} />
-    </div>
-  );
+    setData({
+      labels: coinChart.map((price: number[]) => {
+        return price[0];
+      }),
+      datasets: [
+        {
+          label: "Dataset 1",
+          data: coinChart.map((price: number[]) => {
+            return price[1];
+          }),
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    });
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    switch (e.target.value) {
+      case "day":
+        onSetDay(1);
+        break;
+      case "week":
+        onSetDay(7);
+        break;
+      case "month":
+        onSetDay(30);
+        break;
+    }
+    setData({
+      labels: coinChart.map((price: number[]) => {
+        return price[0];
+      }),
+      datasets: [
+        {
+          label: "Dataset 1",
+          data: coinChart.map((price: number[]) => {
+            return price[1];
+          }),
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+      ],
+    });
+    return (
+      <>
+        <select onChange={(e) => handleChange(e)}>
+          <option value="day">День</option>
+          <option value="week">Неделя</option>
+          <option value="month">Месяц</option>
+        </select>
+        {data ? <Line options={options} data={data} /> : null}
+      </>
+    );
+  };
 };
 
 export default CoinChart;

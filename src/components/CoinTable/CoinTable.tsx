@@ -36,7 +36,7 @@ const CoinTable: React.FC<CoinTableProps> = ({
             <td>
               <img src={coin.image} alt={coin.name} />
             </td>
-            <td>{coin.current_price}$</td>
+            <td>{Number(coin.current_price.toFixed(2))}$</td>
             <td>{coin.market_cap}$</td>
             <td>
               <Badge

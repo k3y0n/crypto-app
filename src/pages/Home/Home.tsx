@@ -49,7 +49,12 @@ const Home: React.FC<HomeProps> = ({
       ? searchResults.slice(startIndex, endIndex)
       : coins.slice(startIndex, endIndex);
 
-  const sortedCoins = _.sortBy(displayedCoins, [sortSettings.column]) as Coin[];
+
+  const filteredCoins = displayedCoins.filter(
+    (item: Coin) => Number(item.current_price.toFixed(2)) > 0
+  );
+
+  const sortedCoins = _.sortBy(filteredCoins, [sortSettings.column]) as Coin[];
 
   if (sortSettings.direction === "desc") {
     sortedCoins.reverse();

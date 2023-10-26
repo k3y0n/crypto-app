@@ -1,29 +1,38 @@
 import { useParams, Link } from "react-router-dom";
 import styles from "./CoinInfoPage.module.css";
+import { useState } from "react";
 import Button from "../../ui/Button/Button";
-import CoinChart from "../../components/CoinChart/CoinChart";
-import { Coin } from "../../types/coin";
 import { useQuery } from "react-query";
-import { getCoin } from "../../lib/api";
+import { getCoin, getCoinChart } from "../../lib/api";
+import CoinChart from "../../components/CoinChart/CoinChart";
 
 const CoinInfoPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<string>();
+  const [day, setDay] = useState(1);
 
-  if (!id) {
-    return <div>No id coin </div>;
-  }
+  const { data, isLoading, isError, error } = useQuery("coin", () =>
+    id ? getCoin(id) : undefined
+  );
 
-  const { data, isLoading } = useQuery("coin", () => getCoin(id));
+  const { data: chartData } = useQuery("coinChart", () =>
+    id && day ? getCoinChart(id, day) : undefined
+  );
 
   if (isLoading) {
     return "Loading...";
   }
 
-  const coin: Coin = Array.isArray(data) ? data[0] : [];
-
-  if (!coin) {
-    return "No Coin Available";
+  if (isError) {
+    return `Error fetching data: ${error.message}`;
   }
+
+  if (!data) {
+    return "No data available.";
+  }
+
+  const coin =
+    data && Array.isArray(data) && data.length > 0 ? data[0] : undefined;
+  const coinChart = chartData && chartData.prices;
 
   return (
     <div className={styles.coinInfoContainer}>
@@ -45,9 +54,9 @@ const CoinInfoPage = () => {
             Add to Portfolio
           </Button>
         </div>
-        {/* <div className={styles.chartContainer}>
-          {chartData && <CoinChart data={chartData} />}
-        </div> */}
+        <div className={styles.chartContainer}>
+          {data && <CoinChart coinChart={coinChart} onSetDay={setDay} />}
+        </div>
       </div>
     </div>
   );
