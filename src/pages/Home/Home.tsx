@@ -3,9 +3,9 @@ import CoinTable from "../../components/CoinTable/CoinTable";
 import Header from "../../components/Header/Header";
 import Pagination from "../../ui/Pagination/Pagination";
 import { calculateTotalPages, getPageSlice } from "../../utils/pagination";
-import { Coin } from "../../types/coin";
 import _ from "lodash";
 import { HomeProps } from "./HomeProps";
+import { ICoin } from "../../types/coin";
 
 const Home: React.FC<HomeProps> = ({
   coins,
@@ -15,7 +15,7 @@ const Home: React.FC<HomeProps> = ({
   setCurrentPage,
 }) => {
   const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<Coin[]>([]);
+  const [searchResults, setSearchResults] = useState<ICoin[]>([]);
 
   const handleSearch = (search: string) => {
     setSearch(search);
@@ -38,6 +38,10 @@ const Home: React.FC<HomeProps> = ({
     { key: "actions", label: "Actions" },
   ];
 
+  if (searchResults.length) {
+    return <div>No coins</div>;
+  }
+
   const totalPages = calculateTotalPages(
     searchResults.length > 0 ? searchResults.length : coins.length || 0
   );
@@ -49,12 +53,11 @@ const Home: React.FC<HomeProps> = ({
       ? searchResults.slice(startIndex, endIndex)
       : coins.slice(startIndex, endIndex);
 
-
   const filteredCoins = displayedCoins.filter(
-    (item: Coin) => Number(item.current_price.toFixed(2)) > 0
+    (item: ICoin) => Number(item.current_price.toFixed(2)) > 0
   );
 
-  const sortedCoins = _.sortBy(filteredCoins, [sortSettings.column]) as Coin[];
+  const sortedCoins = _.sortBy(filteredCoins, [sortSettings.column]) as ICoin[];
 
   if (sortSettings.direction === "desc") {
     sortedCoins.reverse();
@@ -63,13 +66,13 @@ const Home: React.FC<HomeProps> = ({
   return (
     <>
       <Header handleSearch={handleSearch} search={search} />
+
       <CoinTable
         coins={sortedCoins}
         headers={headers}
         handleSort={handleSort}
         sortSettings={sortSettings}
       />
-
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

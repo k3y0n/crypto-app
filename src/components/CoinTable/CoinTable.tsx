@@ -19,7 +19,7 @@ const CoinTable: React.FC<CoinTableProps> = ({
   };
 
   const handleClick = (id: string) => {
-    navigate(`/coinInfoPage/${id}`);
+    navigate(`/coin/${id}`);
   };
 
   return (

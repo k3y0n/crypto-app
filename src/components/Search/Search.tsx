@@ -11,7 +11,7 @@ const Search: React.FC<SearchProps> = ({ search, handleSearch }) => {
   return (
     <Input
       type="text"
-      placeholder="search by coin  name"
+      placeholder="Type coin  name..."
       value={search}
       searchChange={handleChange}
     />

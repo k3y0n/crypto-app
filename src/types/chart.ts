@@ -1,3 +1,3 @@
-export interface CoinChartData {
+export interface IChart {
   prices: number[];
 }

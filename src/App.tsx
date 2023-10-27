@@ -1,23 +1,24 @@
 import "./App.css";
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Coin } from "./types/coin";
 import { getCoins } from "./lib/api";
 import Home from "./pages/Home/Home";
-import NotFound from "./pages/NotFound/NotFound";
 import { useQuery } from "react-query";
 import { SortSettings } from "./types/sort";
-import CoinInfoPage from "./pages/CoinInfoPage/CoinInfoPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import { ICoin } from "./types/coin";
+import CoinPage from "./pages/CoinPage/CoinPage";
 
 function App() {
-  const coinsQuery = useQuery("coins", () =>
-    getCoins(sortSettings.column, sortSettings.direction, 1)
-  );
   const [currentPage, setCurrentPage] = useState(1);
   const [sortSettings, setSortSettings] = useState<SortSettings>({
-    column: "market_cap",
+    column: "",
     direction: "desc",
   });
+
+  const { data, isFetching, isError } = useQuery(["coins"], () =>
+    getCoins(sortSettings.column, sortSettings.direction, currentPage)
+  );
 
   const handleSort = (column: string) => {
     setSortSettings((prevSettings) => {
@@ -31,19 +32,19 @@ function App() {
     });
   };
 
-  if (coinsQuery.data && !coinsQuery.data.length) {
-    return <div>Some error to get coins</div>;
-  }
-
-  if (coinsQuery.isLoading || coinsQuery.isFetching) {
+  if (isFetching) {
     return <div>Loading...</div>;
   }
 
-  if (coinsQuery.isError) {
+  if (isError) {
     return <div>Error fetching data</div>;
   }
 
-  const coins: Coin[] = coinsQuery.data!;
+  let coins: ICoin[] | undefined = undefined;
+
+  if (data) {
+    coins = data;
+  }
 
   return (
     <>
@@ -51,17 +52,19 @@ function App() {
         <Route
           path="/"
           element={
-            <Home
-              coins={coins}
-              handleSort={handleSort}
-              setCurrentPage={setCurrentPage}
-              currentPage={currentPage}
-              sortSettings={sortSettings}
-            />
+            coins && (
+              <Home
+                coins={coins}
+                handleSort={handleSort}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+                sortSettings={sortSettings}
+              />
+            )
           }
         />
-        <Route path="/coinInfoPage/:id" element={<CoinInfoPage />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/coin/:id" element={<CoinPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

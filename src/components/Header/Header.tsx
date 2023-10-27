@@ -1,7 +1,7 @@
 import React from "react";
 import Search from "../Search/Search";
 import styles from "./Header.module.css";
-import { HeaderProps } from "./HeaderPropts";
+import { HeaderProps } from "./HeaderProps";
 
 const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
   return (
