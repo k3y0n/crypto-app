@@ -1,6 +1,6 @@
 import { Line } from "react-chartjs-2";
 import { useQuery } from "react-query";
-import { useState } from "react";
+import { useState,memo } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,6 +16,8 @@ import type { ChartData, ChartOptions } from "chart.js";
 import moment from "moment";
 import { getCoin, getCoinChart } from "../../lib/api";
 import { ICoin } from "../../types/coin";
+import styles from "./CoinPage.module.scss";
+import Button from "../../ui/Button/Button";
 
 ChartJS.register(
   CategoryScale,
@@ -27,6 +29,7 @@ ChartJS.register(
   Legend
 );
 
+const MemoizedLine = memo(Line);
 
 const CoinPage = () => {
   const { id } = useParams<string>();
@@ -35,6 +38,10 @@ const CoinPage = () => {
   const { data, isFetching, isError } = useQuery(["chart", id, day], () =>
     getCoinChart(id, day)
   );
+
+  const handleClick = () => {
+    
+  }
 
   const coinData = useQuery(["coin", id], () => getCoin(id));
 
@@ -98,35 +105,43 @@ const CoinPage = () => {
   };
 
   return (
-    <div style={{ width: "1200px", height: "800px" }}>
+    <div className={styles.coinPageContainer}>
+      <Link to="/" className={styles.back}>
+        Back to Table
+      </Link>
       {coin && (
-        <>
-          <Link to="/">Back to Table</Link>
-          <h1 id={coin.id.toString()}>{coin.name}</h1>
-          <div>
-            <div>
-              <img src={coin.image} alt={coin.name} />
+        <div className={styles.coinInfo}>
+          <p className={styles.coinHeader}>
+            <img src={coin.image} alt={coin.name} />
+            <h1 id={coin.id.toString()}>{coin.name}</h1>
+          </p>
+          <div className={styles.coinInfoBody}>
+            <p>
               <p>Symbol: {coin.symbol}</p>
               <p>Rank: {coin.market_cap_rank}</p>
               <p>Supply: {coin.total_supply}</p>
+            </p>
+            <p>
               <p>Price: {coin.current_price}$</p>
               <p>Market Cap: {coin.market_cap}$</p>
               <p>Max Supply: {coin.max_supply}</p>
-              <button onClick={() => console.log("add")}>
-                Add to Portfolio
-              </button>
-            </div>
-            <select onChange={(e) => handleChange(e)} value={selectedOptions}>
-              <option value="Day">Day</option>
-              <option value="Week">Week</option>
-              <option value="Month">Month</option>
-            </select>
-            <div style={{ width: "1000px", height: "800px" }}>
-              {dataChart && <Line options={options} data={dataChart} />}
-            </div>
+            </p>
           </div>
-        </>
+          <Button onClick={handleClick}>Add Coins</Button>
+        </div>
       )}
+      <select
+        className={styles.select}
+        onChange={(e) => handleChange(e)}
+        value={selectedOptions}
+      >
+        <option value="Day">Day</option>
+        <option value="Week">Week</option>
+        <option value="Month">Month</option>
+      </select>
+      <div className={styles.chartContainer}>
+        {dataChart && <MemoizedLine options={options} data={dataChart} />}
+      </div>
     </div>
   );
 };

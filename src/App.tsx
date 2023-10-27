@@ -2,7 +2,7 @@ import "./App.css";
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { getCoins } from "./lib/api";
-import Home from "./pages/Home/Home";
+import Home from "./pages/HomePage/HomePage";
 import { useQuery } from "react-query";
 import { SortSettings } from "./types/sort";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
@@ -13,7 +13,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortSettings, setSortSettings] = useState<SortSettings>({
     column: "",
-    direction: "desc",
+    direction: "asc",
   });
 
   const { data, isFetching, isError } = useQuery(["coins"], () =>
@@ -31,6 +31,8 @@ function App() {
       return { ...prevSettings, column };
     });
   };
+
+  
 
   if (isFetching) {
     return <div>Loading...</div>;

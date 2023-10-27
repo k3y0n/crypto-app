@@ -1,8 +1,8 @@
-import { Coin } from "../../types/coin";
+import { ICoin } from "../../types/coin";
 import { SortSettings } from "../../types/sort";
 
 export interface HomeProps {
-  coins: Coin[];
+  coins: ICoin[];
   currentPage:number,
   sortSettings:SortSettings,
   handleSort: (str: string) => void;

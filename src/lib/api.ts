@@ -2,20 +2,49 @@ import axios from "axios";
 import { ICoin } from "../types/coin";
 import { IChart } from "../types/chart";
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+
+interface IBTC {
+  bitcoin: {
+    usd: number;
+  };
+}
+
+interface ITrendinCoin {
+  item: {
+    id: string;
+    name: string;
+    symbol: string;
+    market_cap_rank: number;
+    thumb: string;
+    price_btc: number;
+  };
+}
+
+export interface ITrending {
+  id: string;
+  name: string;
+  usdPrice: number;
+  symbol: string;
+  image: string;
+}
+
 export const getCoins = async (
   query?: string,
   direction?: string,
   page?: number
-) => {
-  const responce = await axios.get<ICoin[]>(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=false&locale=en`,
+): Promise<ICoin[]> => {
+  const orderBy =
+    direction && query === "" ? "market_cap_desc" : query + "_" + direction;
+  const responce = await axios.get(
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=false&locale=en&precision=2`,
     {
       params: {
         page: page,
-        order: query + "_" + direction,
+        order: orderBy,
       },
       headers: {
-        " x-cg-demo-api-key": "CG-uWLv7ip3VyMJv5nFvJ4gSBFq",
+        " x-cg-demo-api-key": API_KEY,
       },
     }
   );
@@ -24,12 +53,12 @@ export const getCoins = async (
   return data;
 };
 
-export const getCoin = async (id: string) => {
-  const responce = await axios.get<ICoin>(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}`,
+export const getCoin = async (id: string): Promise<ICoin> => {
+  const responce = await axios.get(
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}&precision=2`,
     {
       headers: {
-        " x-cg-demo-api-key": "CG-uWLv7ip3VyMJv5nFvJ4gSBFq",
+        " x-cg-demo-api-key": API_KEY,
       },
     }
   );
@@ -38,16 +67,68 @@ export const getCoin = async (id: string) => {
   return data;
 };
 
-export const getCoinChart = async (id: string, day: number) => {
-  const responce = await axios.get<IChart>(
+export const getCoinChart = async (
+  id: string,
+  day: number
+): Promise<IChart> => {
+  const responce = await axios.get(
     `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${day}`,
     {
       headers: {
-        " x-cg-demo-api-key": "CG-uWLv7ip3VyMJv5nFvJ4gSBFq",
+        " x-cg-demo-api-key": API_KEY,
       },
     }
   );
 
   const { data } = responce;
   return data;
+};
+
+const getBTCPrice = async (): Promise<IBTC> => {
+  const response = await axios.get(
+    `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_last_updated_at=true&precision=2`,
+    {
+      headers: {
+        "x-cg-demo-api-key": API_KEY,
+      },
+    }
+  );
+
+  const data = response.data;
+
+  return data.bitcoin.usd;
+};
+
+const getTrendingData = async (): Promise<Array<ITrendinCoin>> => {
+  const response = await axios.get(
+    `https://api.coingecko.com/api/v3/search/trending`,
+    {
+      headers: {
+        "x-cg-demo-api-key": API_KEY,
+      },
+    }
+  );
+
+  const coins = response.data.coins;
+  return coins;
+};
+
+export const getTrending = async (): Promise<ITrending[]> => {
+  const coins = await getTrendingData();
+  const priceBTC = await getBTCPrice();
+
+  const trendingData = coins.map((coin: ITrendinCoin) => {
+    const { id,name, symbol, thumb, price_btc } = coin.item;
+    const usdPrice = typeof priceBTC === "number" ? price_btc * priceBTC : 0;
+
+    return {
+      id,
+      name,
+      usdPrice,
+      symbol,
+      image: thumb,
+    };
+  });
+
+  return trendingData;
 };

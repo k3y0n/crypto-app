@@ -4,7 +4,7 @@ import Header from "../../components/Header/Header";
 import Pagination from "../../ui/Pagination/Pagination";
 import { calculateTotalPages, getPageSlice } from "../../utils/pagination";
 import _ from "lodash";
-import { HomeProps } from "./HomeProps";
+import { HomeProps } from "./HomePageProps";
 import { ICoin } from "../../types/coin";
 
 const Home: React.FC<HomeProps> = ({
@@ -54,7 +54,7 @@ const Home: React.FC<HomeProps> = ({
       : coins.slice(startIndex, endIndex);
 
   const filteredCoins = displayedCoins.filter(
-    (item: ICoin) => Number(item.current_price.toFixed(2)) > 0
+    (item: ICoin) => item.current_price > 0
   );
 
   const sortedCoins = _.sortBy(filteredCoins, [sortSettings.column]) as ICoin[];

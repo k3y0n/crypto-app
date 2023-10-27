@@ -1,0 +1,65 @@
+.card {
+  width: 750px;
+  height: 220px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header img {
+  width: 40px;
+  height: 40px;
+}
+
+.header h2 {
+  font-size: 24px;
+}
+
+.coinList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+
+.coinCard {
+  background-color: white;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.coinCard .cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.coinCard .cardHeader p {
+  margin-right: 10px;
+}
+
+.coinCard .cardTitle {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.coinCard .coinSymbol {
+  font-size: 14px;
+  color: gray;
+  font-weight: 800;
+}
+
+.coinCard .cardBody {
+  margin-top: 10px;
+}
+
+.coinCard .usdPrice {
+  font-weight: 600;
+  font-size: 16px;
+}
