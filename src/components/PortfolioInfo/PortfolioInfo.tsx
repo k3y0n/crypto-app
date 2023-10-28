@@ -36,7 +36,7 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
 
   let totalChange = 0;
 
-  if (!coinPrices.length) {
+  if (coinPrices.length === 0) {
     return (
       <div className={styles["portfolio-card"]}>
         <div className={styles["no-coin-message"]}>No coin in portfolio</div>
