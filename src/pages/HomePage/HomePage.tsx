@@ -19,14 +19,11 @@ const Home: React.FC<HomeProps> = ({
 
   const handleSearch = (search: string) => {
     setSearch(search);
-    if (search.trim() === "") {
-      setSearchResults([]);
-    } else {
-      const results = coins.filter((coin) =>
-        coin.symbol.toLowerCase().includes(search.toLowerCase())
-      );
-      setSearchResults(results);
-    }
+
+    const results = coins.filter((coin) =>
+      coin.symbol.toLowerCase().includes(search.toLowerCase())
+    );
+    setSearchResults(results);
   };
 
   const headers = [
@@ -37,10 +34,6 @@ const Home: React.FC<HomeProps> = ({
     { key: "price_change_percentage_24h", label: "Percent Change 24h" },
     { key: "actions", label: "Actions" },
   ];
-
-  if (searchResults.length) {
-    return <div>No coins</div>;
-  }
 
   const totalPages = calculateTotalPages(
     searchResults.length > 0 ? searchResults.length : coins.length || 0
@@ -67,17 +60,23 @@ const Home: React.FC<HomeProps> = ({
     <>
       <Header handleSearch={handleSearch} search={search} />
 
-      <CoinTable
-        coins={sortedCoins}
-        headers={headers}
-        handleSort={handleSort}
-        sortSettings={sortSettings}
-      />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      {searchResults.length > 0 ? (
+        <>
+          <CoinTable
+            coins={sortedCoins}
+            headers={headers}
+            handleSort={handleSort}
+            sortSettings={sortSettings}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      ) : (
+        <div>No results found</div>
+      )}
     </>
   );
 };

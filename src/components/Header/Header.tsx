@@ -30,11 +30,9 @@ const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
   }
 
   return (
-    <div className={styles.header}>
-      <div className={styles.traiding}>
+    <header className={styles.header}>
+      <div className={styles.header__top}>
         <TopCoins />
-      </div>
-      <div className={styles.portfolio}>
         {coinPrices && (
           <PortfolioInfo
             value={totalPortfolioValue}
@@ -46,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
       <div className={styles.search}>
         <Search search={search} handleSearch={handleSearch} />
       </div>
-    </div>
+    </header>
   );
 };
 

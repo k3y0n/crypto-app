@@ -44,20 +44,19 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
   }
 
   return (
-    <div className={styles["portfolio-card"]} onClick={openModal}>
-      <div className={styles["card-content"]}>
-        <span className={styles["value"]}>{value.toFixed(2)} USD</span>
-        <span className={styles["change"]}>
-          {totalChange.toFixed(2)}USD (
-          <div className={styles["badge-wrapper"]}>
-            <Badge
-              value={percentageChange}
-              color={Number(percentageChange) > 0 ? "green" : "red"}
-            />
-            {Number(percentageChange) > 0 ? "+%" : "-%"}
-          </div>
-          )
-        </span>
+    <div className={styles.portfolio} onClick={openModal}>
+      <h2>My Portfolio</h2>
+      <div className={styles.portfolio__balance}>
+       <p> Balance {value.toFixed(2)} USD</p>
+       <p>Change {totalChange.toFixed(2)} USD</p>
+        <p><Badge
+          value={`${
+            Number(percentageChange) > 0
+              ? `${percentageChange}+%`
+              : `${percentageChange}-%`
+          }`}
+          color={Number(percentageChange) > 0 ? "green" : "red"}
+        /></p>
       </div>
       {isVisible && coinsData && (
         <Modal

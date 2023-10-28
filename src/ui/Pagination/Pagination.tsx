@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Pagination.module.css";
+import styles from "./Pagination.module.scss";
 import { PaginationProps } from "./PaginationProps";
 import Button from "../Button/Button";
 

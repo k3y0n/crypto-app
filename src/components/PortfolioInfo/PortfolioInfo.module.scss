@@ -1,35 +1,23 @@
-.portfolio-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #f9f9f9;
-  transition: background-color 0.3s;
-  cursor: pointer;
-}
-
-.portfolio-card:hover {
-  background-color: #eaeaea;
-}
-
-.card-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.value {
-  font-size: 1.2em;
-}
-
-.change {
-  font-size: 1.2em;
-}
-
-.badge-wrapper {
-  display: inline-block;
-  margin-left: 10px;
-}
-
-.no-coin-message {
-  text-align: center;
+.portfolio {
   padding: 20px;
+  background-color: #222531;
+  color: #fff;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  &__balance {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+}
+
+.portfolio:hover {
+  cursor: pointer;
+  transition: .5s all ease-in;
+  background-color: #535458;
 }

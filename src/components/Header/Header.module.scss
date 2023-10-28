@@ -1,18 +1,13 @@
 .header {
-  padding: 20px;
-  display: grid;
-  grid-template-areas:
-    "traiding portfolio"
-    "search search";
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  &__top{
+    display: flex;
+    justify-content: center;
     gap: 20px;
+  }
 }
 
-.traiding {
-  grid-area: traiding;
-}
-.portfolio {
-  grid-area: portfolio;
-}
-.search {
-  grid-area: search;
-}
+

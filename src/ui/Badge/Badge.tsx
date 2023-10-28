@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Badge.module.css";
+import styles from "./Badge.module.scss";
 import { BadgeProps } from "./BadgeProps";
 
 const Badge: React.FC<BadgeProps> = ({ value, color }) => {
