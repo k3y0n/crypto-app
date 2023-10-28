@@ -98,7 +98,7 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
           </label>
           {errors.quantity && <span>{errors.quantity.message}</span>}
         </div>
-        <Button type="submit" enabled={!isValid}>
+        <Button type="submit" disabled={!isValid}>
           Add
         </Button>
       </form>

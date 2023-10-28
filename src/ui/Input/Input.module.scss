@@ -13,3 +13,9 @@
 .input-field:focus {
   border-color: #007bff;
 }
+
+@media (max-width: 1024px) {
+  .input-field {
+    width: 80%;
+  }
+}

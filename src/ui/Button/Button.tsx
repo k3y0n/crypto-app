@@ -8,6 +8,7 @@ const Button: React.FC<ButtonProps> = ({
 	className,
 	children,
 	type,
+	disabled,
 }) => {
 	const buttonType = type || "button";
 
@@ -16,6 +17,7 @@ const Button: React.FC<ButtonProps> = ({
 			className={`${styles.button} ${styles[className || ""]}`}
 			onClick={onClick}
 			type={buttonType}
+			disabled={disabled}
 		>
 			{children ? children : label}
 		</button>

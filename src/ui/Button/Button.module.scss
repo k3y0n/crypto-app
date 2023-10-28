@@ -20,11 +20,15 @@
   color: #fff;
 }
 
-.button-delete{
+.button-delete {
   background-color: red;
   color: #fff;
 }
 
-.button-delete:hover{
+.button-delete:hover {
   background-color: rgb(150, 30, 30);
+}
+
+.button:disabled {
+  cursor: not-allowed;
 }

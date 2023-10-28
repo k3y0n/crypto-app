@@ -9,17 +9,16 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import moment from "moment";
-import { useState } from "react";
 import { Line } from "react-chartjs-2";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { getCoin, getCoinChart } from "../../lib/api";
 import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
 import Modal from "../../ui/Modal/Modal";
+import moment from "moment";
 import { ICoin } from "../../types/coin";
-import { IChart } from "../../types/chart";
 
 ChartJS.register(
   CategoryScale,
@@ -73,9 +72,9 @@ const CoinPage = () => {
   };
 
   const dataChart: ChartData<"line"> = {
-    labels: data?.prices.map((item: IChart[]) => {
+    labels: s((item: number[]) => {
       return moment
-        .unix(item[0] / 1000)
+        .unix((item[0] as number) / 1000)
         .format(selectedOptions === "Day" ? "HH:MM" : "MM-DD");
     }),
     datasets: [
@@ -150,7 +149,12 @@ const CoinPage = () => {
         {dataChart && <Line options={options} data={dataChart} />}
       </div>
       {isVisible && coin && (
-        <Modal isVisible={isVisible} onClose={onCloseModal} coinData={coin} />
+        <Modal
+          isVisible={isVisible}
+          selectedComponent={"Form"}
+          onClose={onCloseModal}
+          coinData={coin}
+        />
       )}
     </div>
   );

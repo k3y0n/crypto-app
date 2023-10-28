@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export interface ButtonProps {
-  enabled?: boolean;
+  disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   label?: string | number;
   className?: string;
