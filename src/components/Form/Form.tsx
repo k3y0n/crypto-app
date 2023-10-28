@@ -85,11 +85,11 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
               id="quantity"
               {...register("quantity", {
                 required: "Это поле обязательное",
-                minLength: {
+                min: {
                   value: 1,
                   message: "Min 1 coin",
                 },
-                maxLength: {
+                max: {
                   value: coinData.max_supply,
                   message: `Max ${coinData.max_supply} coin`,
                 },
