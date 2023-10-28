@@ -1,0 +1,25 @@
+.coinTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #111;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.coinTable th,
+.coinTable td {
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.coinTable th {
+  background-color: #1256e1;
+  color: #fff;
+}
+
+.coinTable img {
+  max-width: 30px;
+  max-height: 30px;
+}

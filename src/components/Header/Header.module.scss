@@ -1,13 +1,18 @@
 .header {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
-  }
+  display: grid;
+  grid-template-areas:
+    "traiding portfolio"
+    "search search";
+    gap: 20px;
+}
+
+.traiding {
+  grid-area: traiding;
+}
+.portfolio {
+  grid-area: portfolio;
+}
+.search {
+  grid-area: search;
 }

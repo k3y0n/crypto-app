@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
 import { getCoins } from "./lib/api";
 import CoinPage from "./pages/CoinPage/CoinPage";
 import Home from "./pages/HomePage/HomePage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { SortSettings } from "./types/sort";
+import styles from "./App.module.scss";
 
 function App() {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -40,7 +40,7 @@ function App() {
 	}
 
 	return (
-		<>
+		<div className={styles.app}>
 			<Routes>
 				<Route
 					path="/"
@@ -59,7 +59,7 @@ function App() {
 				<Route path="/coin/:id" element={<CoinPage />} />
 				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
-		</>
+		</div>
 	);
 }
 

@@ -1,0 +1,35 @@
+.portfolio-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.portfolio-card:hover {
+  background-color: #eaeaea;
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.value {
+  font-size: 1.2em;
+}
+
+.change {
+  font-size: 1.2em;
+}
+
+.badge-wrapper {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.no-coin-message {
+  text-align: center;
+  padding: 20px;
+}

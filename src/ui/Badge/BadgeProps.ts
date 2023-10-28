@@ -1,4 +1,4 @@
 export interface BadgeProps {
-  value: number;
+  value: number | string;
   color: "green" | "red";
 }

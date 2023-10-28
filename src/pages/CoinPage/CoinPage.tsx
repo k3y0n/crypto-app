@@ -1,13 +1,13 @@
 import type { ChartData, ChartOptions } from "chart.js";
 import {
-	CategoryScale,
-	Chart as ChartJS,
-	Legend,
-	LineElement,
-	LinearScale,
-	PointElement,
-	Title,
-	Tooltip,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Title,
+  Tooltip,
 } from "chart.js";
 import moment from "moment";
 import { useState } from "react";
@@ -17,125 +17,143 @@ import { Link, useParams } from "react-router-dom";
 import { getCoin, getCoinChart } from "../../lib/api";
 import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
+import Modal from "../../ui/Modal/Modal";
+import { ICoin } from "../../types/coin";
+import { IChart } from "../../types/chart";
 
 ChartJS.register(
-	CategoryScale,
-	LinearScale,
-	PointElement,
-	LineElement,
-	Title,
-	Tooltip,
-	Legend
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
 );
 
 const CoinPage = () => {
-	const { id } = useParams<string>();
-	const [day, setDay] = useState(1);
-	const [selectedOptions, setSelectedOptions] = useState("Day");
-	const { data, isFetching, isError } = useQuery(["chart", id, day], () =>
-		getCoinChart(id, day)
-	);
+  const { id } = useParams() as { id: string };
 
-	const handleClick = () => {};
+  const [day, setDay] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState("Day");
+  const { data, isFetching, isError } = useQuery(["chart", id, day], () =>
+    getCoinChart(id, day)
+  );
 
-	const coinData = useQuery(["coin", id], () => getCoin(id));
+  const handleClick = () => {
+    setIsVisible(!isVisible);
+  };
 
-	if (isFetching) {
-		return "Loading...";
-	}
+  const onCloseModal = () => {
+    setIsVisible(!isVisible);
+  };
 
-	if (isError) {
-		return "Error loading";
-	}
+  const coinData = useQuery(["coin", id], () => getCoin(id));
 
-	const options: ChartOptions<"line"> = {
-		responsive: true,
-		plugins: {
-			legend: {
-				position: "top" as const,
-			},
-			title: {
-				display: true,
-				text: `${id?.toLocaleUpperCase()} Line Chart`,
-			},
-		},
-	};
+  if (isFetching) {
+    return "Loading...";
+  }
 
-	const dataChart: ChartData<"line"> = {
-		labels: data?.prices.map((item: number[]) => {
-			return moment
-				.unix(item[0] / 1000)
-				.format(selectedOptions === "Day" ? "HH:MM" : "MM-DD");
-		}),
-		datasets: [
-			{
-				label: `${id?.toLocaleUpperCase()}`,
-				data: data?.prices.map((item: number[]) => {
-					return item[1];
-				}),
-				borderColor: "rgb(0, 0, 100)",
-				backgroundColor: "rgba(0, 99, 132, 0.5)",
-			},
-		],
-	};
+  if (isError) {
+    return "Error loading";
+  }
 
-	const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-		setSelectedOptions(e.target.value);
-		switch (e.target.value) {
-			case "Day":
-				setDay(1);
-				break;
-			case "Week":
-				setDay(7);
-				break;
-			case "Month":
-				setDay(30);
-				break;
-		}
-	};
+  const options: ChartOptions<"line"> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: `${id?.toLocaleUpperCase()} Line Chart`,
+      },
+    },
+  };
 
-	return (
-		<div className={styles.coinPageContainer}>
-			<Link to="/" className={styles.back}>
-				Back to Table
-			</Link>
-			{coinData && (
-				<div className={styles.coinInfo}>
-					<p className={styles.coinHeader}>
-						<img src={coinData?.data[0].image} alt={coinData?.data[0].name} />
-						<h1 id={coinData?.data[0].id.toString()}>
-							{coinData?.data[0].name}
-						</h1>
-					</p>
-					<div className={styles.coinInfoBody}>
-						<p>
-							<p>Symbol: {coinData?.data[0].symbol}</p>
-							<p>Rank: {coinData?.data[0].market_cap_rank}</p>
-							<p>Supply: {coinData?.data[0].total_supply}</p>
-						</p>
-						<p>
-							<p>Price: {coinData?.data[0].current_price}$</p>
-							<p>Market Cap: {coinData?.data[0].market_cap}$</p>
-							<p>Max Supply: {coinData?.data[0].max_supply}</p>
-						</p>
-					</div>
-					<Button onClick={handleClick}>Add Coins</Button>
-				</div>
-			)}
-			<select
-				className={styles.select}
-				onChange={(e) => handleChange(e)}
-				value={selectedOptions}
-			>
-				<option value="Day">Day</option>
-				<option value="Week">Week</option>
-				<option value="Month">Month</option>
-			</select>
-			<div className={styles.chartContainer}>
-				{dataChart && <Line options={options} data={dataChart} />}
-			</div>
-		</div>
-	);
+  const dataChart: ChartData<"line"> = {
+    labels: data?.prices.map((item: IChart[]) => {
+      return moment
+        .unix(item[0] / 1000)
+        .format(selectedOptions === "Day" ? "HH:MM" : "MM-DD");
+    }),
+    datasets: [
+      {
+        label: `${id?.toLocaleUpperCase()}`,
+        data: data?.prices.map((item: number[]) => {
+          return item[1];
+        }),
+        borderColor: "rgb(0, 0, 100)",
+        backgroundColor: "rgba(0, 99, 132, 0.5)",
+      },
+    ],
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedOptions(e.target.value);
+    switch (e.target.value) {
+      case "Day":
+        setDay(1);
+        break;
+      case "Week":
+        setDay(7);
+        break;
+      case "Month":
+        setDay(30);
+        break;
+    }
+  };
+
+  let coin: ICoin | undefined = undefined;
+
+  if (coinData.status === "success" && Array.isArray(coinData.data)) {
+    coin = coinData.data[0];
+  }
+
+  return (
+    <div className={styles.coinPageContainer}>
+      <Link to="/" className={styles.back}>
+        Back to Table
+      </Link>
+      {coin && (
+        <div className={styles.coinInfo}>
+          <p className={styles.coinHeader}>
+            <img src={coin.image} alt={coin.name} />
+            <span id={coin.id.toString()}>{coin.name}</span>
+          </p>
+          <div className={styles.coinInfoBody}>
+            <div>
+              <p>Symbol: {coin.symbol}</p>
+              <p>Rank: {coin.market_cap_rank}</p>
+              <p>Supply: {coin.total_supply}</p>
+            </div>
+            <div>
+              <p>Price: {coin.current_price}$</p>
+              <p>Market Cap: {coin.market_cap}$</p>
+              <p>Max Supply: {coin.max_supply}</p>
+            </div>
+          </div>
+          <Button onClick={handleClick}>Add Coins</Button>
+        </div>
+      )}
+      <select
+        className={styles.select}
+        onChange={(e) => handleChange(e)}
+        value={selectedOptions}
+      >
+        <option value="Day">Day</option>
+        <option value="Week">Week</option>
+        <option value="Month">Month</option>
+      </select>
+      <div className={styles.chartContainer}>
+        {dataChart && <Line options={options} data={dataChart} />}
+      </div>
+      {isVisible && coin && (
+        <Modal isVisible={isVisible} onClose={onCloseModal} coinData={coin} />
+      )}
+    </div>
+  );
 };
 
 export default CoinPage;

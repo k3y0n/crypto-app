@@ -28,6 +28,9 @@
 
   .coinHeader {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
   }
 
   .coinInfoBody {
@@ -88,6 +91,7 @@
   }
 }
 .chartContainer { 
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
