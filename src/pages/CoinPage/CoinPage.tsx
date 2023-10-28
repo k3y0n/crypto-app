@@ -19,6 +19,7 @@ import styles from "./CoinPage.module.scss";
 import Modal from "../../ui/Modal/Modal";
 import moment from "moment";
 import { ICoin } from "../../types/coin";
+import CoinPageLoader from "./CoinPageLoader";
 
 ChartJS.register(
   CategoryScale,
@@ -51,7 +52,7 @@ const CoinPage = () => {
   const coinData = useQuery(["coin", id], () => getCoin(id));
 
   if (isFetching) {
-    return "Loading...";
+    return <CoinPageLoader/>;
   }
 
   if (isError) {

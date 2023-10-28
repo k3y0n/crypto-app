@@ -15,15 +15,18 @@ const Home: React.FC<HomeProps> = ({
   setCurrentPage,
 }) => {
   const [search, setSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<ICoin[]>([]);
+  const [searchResults, setSearchResults] = useState<ICoin[]>(coins);
 
   const handleSearch = (search: string) => {
     setSearch(search);
-
-    const results = coins.filter((coin) =>
-      coin.symbol.toLowerCase().includes(search.toLowerCase())
-    );
-    setSearchResults(results);
+    if (search.trim() === "") {
+      setSearchResults(coins);
+    } else {
+      const results = coins.filter((coin) =>
+        coin.symbol.toLowerCase().includes(search.toLowerCase())
+      );
+      setSearchResults(results);
+    }
   };
 
   const headers = [
@@ -59,8 +62,21 @@ const Home: React.FC<HomeProps> = ({
   return (
     <>
       <Header handleSearch={handleSearch} search={search} />
-
-      {searchResults.length > 0 ? (
+      {searchResults.length > 0 && search !== "" ? (
+        <>
+          <CoinTable
+            coins={searchResults}
+            headers={headers}
+            handleSort={handleSort}
+            sortSettings={sortSettings}
+          />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
+      ) : searchResults.length ? (
         <>
           <CoinTable
             coins={sortedCoins}
@@ -75,7 +91,7 @@ const Home: React.FC<HomeProps> = ({
           />
         </>
       ) : (
-        <div>No results found</div>
+        <div> Not found coins</div>
       )}
     </>
   );

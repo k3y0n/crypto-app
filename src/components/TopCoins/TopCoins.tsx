@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import { ITrending, getTrending } from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 import styles from "./TopCoins.module.scss";
+import TopCoinsLoader from "./TopCoinsLoader";
 
 const TopCoins = () => {
   const { data, isFetching, isError } = useQuery("trending", getTrending);
@@ -12,7 +13,7 @@ const TopCoins = () => {
   };
 
   if (isFetching) {
-    return <div>Loading...</div>;
+    return <TopCoinsLoader/>;
   }
 
   if (isError) {

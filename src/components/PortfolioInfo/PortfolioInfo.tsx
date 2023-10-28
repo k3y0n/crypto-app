@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PortfolioItem } from "../../types/portfolio";
 import Badge from "../../ui/Badge/Badge";
 import styles from "./PortfolioInfo.module.scss";
 import Modal from "../../ui/Modal/Modal";
+import PortfolioInfoLoader from "./PortfolioInfoLoader";
 
 interface PortfolioInfoProps {
   value: number;
@@ -16,6 +17,16 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
   coinPrices,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isloading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    return () => setIsLoading(false);
+  }, []);
+
+  if (isloading) {
+    return <PortfolioInfoLoader />;
+  }
+
   const openModal = () => {
     setIsVisible(!isVisible);
   };
@@ -47,16 +58,18 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
     <div className={styles.portfolio} onClick={openModal}>
       <h2>My Portfolio</h2>
       <div className={styles.portfolio__balance}>
-       <p> Balance {value.toFixed(2)} USD</p>
-       <p>Change {totalChange.toFixed(2)} USD</p>
-        <p><Badge
-          value={`${
-            Number(percentageChange) > 0
-              ? `${percentageChange}+%`
-              : `${percentageChange}-%`
-          }`}
-          color={Number(percentageChange) > 0 ? "green" : "red"}
-        /></p>
+        <p> Balance {value.toFixed(2)} USD</p>
+        <p>Change {totalChange.toFixed(2)} USD</p>
+        <p>
+          <Badge
+            value={`${
+              Number(percentageChange) > 0
+                ? `${percentageChange}+%`
+                : `${percentageChange}-%`
+            }`}
+            color={Number(percentageChange) > 0 ? "green" : "red"}
+          />
+        </p>
       </div>
       {isVisible && coinsData && (
         <Modal
