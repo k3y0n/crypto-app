@@ -72,22 +72,23 @@ const CoinPage = () => {
   };
 
   const dataChart: ChartData<"line"> = {
-    labels: s((item: number[]) => {
+    labels: data?.prices?.map((item: [number, number]) => {
       return moment
-        .unix((item[0] as number) / 1000)
+        .unix(item[0] / 1000)
         .format(selectedOptions === "Day" ? "HH:MM" : "MM-DD");
-    }),
+    }) ?? [],
     datasets: [
       {
         label: `${id?.toLocaleUpperCase()}`,
-        data: data?.prices.map((item: number[]) => {
+        data: data?.prices?.map((item: [number, number]) => {
           return item[1];
-        }),
+        }) ?? [],
         borderColor: "rgb(0, 0, 100)",
         backgroundColor: "rgba(0, 99, 132, 0.5)",
       },
     ],
   };
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOptions(e.target.value);

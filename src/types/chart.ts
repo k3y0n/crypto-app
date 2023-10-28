@@ -1,3 +1,3 @@
 export interface IChart {
-  prices: number[];
+  prices: [number, number][];
 }
