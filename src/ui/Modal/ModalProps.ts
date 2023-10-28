@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
+import { ICoin } from "../../types/coin";
 
-export interface ModalProps{
-    isVisibility: boolean;
-    children?: ReactNode
+export interface ModalProps {
+	isVisible: boolean;
+	coinData: ICoin;
+	onClose: () => void;
 }
