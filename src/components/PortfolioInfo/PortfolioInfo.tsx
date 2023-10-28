@@ -20,7 +20,7 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
   const [isloading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    return () => setIsLoading(false);
+    setIsLoading(false);
   }, []);
 
   if (isloading) {
