@@ -36,6 +36,14 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
 
   let totalChange = 0;
 
+  if (!coinPrices.length) {
+    return (
+      <div className={styles["portfolio-card"]}>
+        <div className={styles["no-coin-message"]}>No coin in portfolio</div>
+      </div>
+    );
+  }
+
   coinsData.forEach((coin) => {
     const currentPrice = coinPrices[coin.id];
     const buyPrice = coin.list[0].buyPrice;
