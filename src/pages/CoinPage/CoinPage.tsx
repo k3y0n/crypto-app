@@ -1,15 +1,3 @@
-import type { ChartData, ChartOptions } from "chart.js";
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LineElement,
-  LinearScale,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
@@ -17,19 +5,9 @@ import { getCoin, getCoinChart } from "../../lib/api";
 import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
 import Modal from "../../ui/Modal/Modal";
-import moment from "moment";
 import { ICoin } from "../../types/coin";
 import CoinPageLoader from "./CoinPageLoader";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import ChartCoin from "../../components/ChartCoin/ChartCoin";
 
 const CoinPage = () => {
   const { id } = useParams() as { id: string };
@@ -37,9 +15,11 @@ const CoinPage = () => {
   const [day, setDay] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState("Day");
-  const { data, isFetching, isError } = useQuery(["chart", id, day], () =>
+
+  const { data, isLoading, isError } = useQuery(["chart", id, day], () =>
     getCoinChart(id, day)
   );
+  const coinData = useQuery(["coin", id], () => getCoin(id));
 
   const handleClick = () => {
     setIsVisible(!isVisible);
@@ -49,62 +29,13 @@ const CoinPage = () => {
     setIsVisible(!isVisible);
   };
 
-  const coinData = useQuery(["coin", id], () => getCoin(id));
-
-  if (isFetching) {
-    return <CoinPageLoader/>;
+  if (isLoading) {
+    return <CoinPageLoader />;
   }
 
   if (isError) {
     return "Error loading";
   }
-
-  const options: ChartOptions<"line"> = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: `${id?.toLocaleUpperCase()} Line Chart`,
-      },
-    },
-  };
-
-  const dataChart: ChartData<"line"> = {
-    labels: data?.prices?.map((item: [number, number]) => {
-      return moment
-        .unix(item[0] / 1000)
-        .format(selectedOptions === "Day" ? "HH:MM" : "MM-DD");
-    }) ?? [],
-    datasets: [
-      {
-        label: `${id?.toLocaleUpperCase()}`,
-        data: data?.prices?.map((item: [number, number]) => {
-          return item[1];
-        }) ?? [],
-        borderColor: "rgb(0, 0, 100)",
-        backgroundColor: "rgba(0, 99, 132, 0.5)",
-      },
-    ],
-  };
-  
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedOptions(e.target.value);
-    switch (e.target.value) {
-      case "Day":
-        setDay(1);
-        break;
-      case "Week":
-        setDay(7);
-        break;
-      case "Month":
-        setDay(30);
-        break;
-    }
-  };
 
   let coin: ICoin | undefined = undefined;
 
@@ -138,18 +69,14 @@ const CoinPage = () => {
           <Button onClick={handleClick}>Add Coins</Button>
         </div>
       )}
-      <select
-        className={styles.select}
-        onChange={(e) => handleChange(e)}
-        value={selectedOptions}
-      >
-        <option value="Day">Day</option>
-        <option value="Week">Week</option>
-        <option value="Month">Month</option>
-      </select>
-      <div className={styles.chartContainer}>
-        {dataChart && <Line options={options} data={dataChart} />}
-      </div>
+      {data && (
+        <ChartCoin
+          data={data}
+          currentOptions={selectedOptions}
+          setDay={setDay}
+          setOptions={setSelectedOptions}
+        />
+      )}
       {isVisible && coin && (
         <Modal
           isVisible={isVisible}

@@ -31,7 +31,7 @@ const Home: React.FC<HomeProps> = ({
 
   const headers = [
     { key: "symbol", label: "Symbol" },
-    { key: "logo", label: "Logo" },
+    { key: "name", label: "Coin" },
     { key: "current_price", label: "Price (USD)" },
     { key: "market_cap", label: "Market Cap" },
     { key: "price_change_percentage_24h", label: "Percent Change 24h" },

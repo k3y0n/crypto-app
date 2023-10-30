@@ -24,7 +24,17 @@ const TableBody: React.FC<TableBodyProps> = ({
         <tr key={coin.id} onClick={() => handleClick(coin.id)}>
           <td>{coin.symbol.toLocaleUpperCase()}</td>
           <td>
-            <img src={coin.image} alt={coin.name} />
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <img src={coin.image} alt={coin.name} />
+              {coin.name}
+            </span>
           </td>
           <td>{coin.current_price}$</td>
           <td>{coin.market_cap}$</td>

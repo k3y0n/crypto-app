@@ -19,7 +19,8 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "recharts": "^2.9.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.200",
@@ -31,6 +32,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "react-apexcharts": "^1.4.1",
     "react-content-loader": "^6.2.1",
     "react-router-dom": "^6.17.0",
     "sass": "^1.69.5",
