@@ -13,19 +13,17 @@ const TopCoins = () => {
   };
 
   if (isFetching) {
-    return <TopCoinsLoader/>;
+    return <TopCoinsLoader />;
   }
 
   if (isError) {
     return <div>Error getting trending coins</div>;
   }
 
-  let filteredData: Array<ITrending> | undefined = undefined;
+  let filteredData: Array<ITrending> = [];
 
   if (data) {
-    filteredData = data
-      .filter((trending) => Number(trending.usdPrice.toFixed(2)) > 0)
-      .slice(0, 3);
+    filteredData = data.filter((trending) => trending.usdPrice > 0).slice(0, 3);
   }
 
   return (

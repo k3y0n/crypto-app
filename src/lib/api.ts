@@ -50,7 +50,9 @@ export const getCoins = async (
   );
 
   const { data } = responce;
-  return data;
+  return data.filter(
+    (coin: ICoin) => coin.current_price.toFixed(2) && coin.market_cap > 0
+  );
 };
 
 export const getCoin = async (id: string): Promise<ICoin> => {
@@ -64,7 +66,7 @@ export const getCoin = async (id: string): Promise<ICoin> => {
   );
 
   const { data } = responce;
-  return data;
+  return data[0];
 };
 
 export const getCoinChart = async (

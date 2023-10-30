@@ -5,13 +5,11 @@ import { getCoin, getCoinChart } from "../../lib/api";
 import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
 import Modal from "../../ui/Modal/Modal";
-import { ICoin } from "../../types/coin";
 import CoinPageLoader from "./CoinPageLoader";
 import ChartCoin from "../../components/ChartCoin/ChartCoin";
 
 const CoinPage = () => {
   const { id } = useParams() as { id: string };
-
   const [day, setDay] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState("Day");
@@ -37,33 +35,27 @@ const CoinPage = () => {
     return "Error loading";
   }
 
-  let coin: ICoin | undefined = undefined;
-
-  if (coinData.status === "success" && Array.isArray(coinData.data)) {
-    coin = coinData.data[0];
-  }
-
   return (
     <div className={styles.coinPageContainer}>
       <Link to="/" className={styles.back}>
         Back to Table
       </Link>
-      {coin && (
+      {coinData.data && (
         <div className={styles.coinInfo}>
           <p className={styles.coinHeader}>
-            <img src={coin.image} alt={coin.name} />
-            <span id={coin.id.toString()}>{coin.name}</span>
+            <img src={coinData.data.image} alt={coinData.data.name} />
+            <span id={coinData.data.id.toString()}>{coinData.data.name}</span>
           </p>
           <div className={styles.coinInfoBody}>
             <div>
-              <p>Symbol: {coin.symbol}</p>
-              <p>Rank: {coin.market_cap_rank}</p>
-              <p>Supply: {coin.total_supply}</p>
+              <p>Symbol: {coinData.data.symbol}</p>
+              <p>Rank: {coinData.data.market_cap_rank}</p>
+              <p>Supply: {coinData.data.total_supply}</p>
             </div>
             <div>
-              <p>Price: {coin.current_price}$</p>
-              <p>Market Cap: {coin.market_cap}$</p>
-              <p>Max Supply: {coin.max_supply}</p>
+              <p>Price: {coinData.data.current_price}$</p>
+              <p>Market Cap: {coinData.data.market_cap}$</p>
+              <p>Max Supply: {coinData.data.max_supply}</p>
             </div>
           </div>
           <Button onClick={handleClick}>Add Coins</Button>
@@ -77,12 +69,12 @@ const CoinPage = () => {
           setOptions={setSelectedOptions}
         />
       )}
-      {isVisible && coin && (
+      {isVisible && coinData.data && (
         <Modal
           isVisible={isVisible}
           selectedComponent={"Form"}
           onClose={onCloseModal}
-          coinData={coin}
+          coinData={coinData.data}
         />
       )}
     </div>
