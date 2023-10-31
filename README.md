@@ -1,5 +1,5 @@
 # React + TypeScript + Vite
-# Demo https://crypto-app-eight-kappa.vercel.app/
+# Demo https://crypto-app-lime-three.vercel.app/coin/bitcoin
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
