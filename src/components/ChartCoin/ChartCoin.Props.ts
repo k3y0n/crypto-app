@@ -1,3 +1,6 @@
+import { IChart } from "../../types/chart";
+
 export interface ChartCoinProps {
-  id: string;
+  selectedOptions: string;
+  data: IChart;
 }
