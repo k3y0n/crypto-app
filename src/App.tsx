@@ -7,7 +7,6 @@ import Home from "./pages/HomePage/HomePage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { SortSettings } from "./types/sort";
 import styles from "./App.module.scss";
-import Loader from "./components/Loader/Loader";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +32,7 @@ function App() {
   };
 
   if (isLoading) {
-    return <Loader width={600} height={400} />;
+    return "Loading...";
   }
 
   if (isError) {
