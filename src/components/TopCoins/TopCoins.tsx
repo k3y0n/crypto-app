@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { ITrending, getTrending } from "../../lib/api";
 import { useNavigate } from "react-router-dom";
 import styles from "./TopCoins.module.scss";
-import TopCoinsLoader from "./TopCoinsLoader";
+import Loader from "../Loader/Loader";
 
 const TopCoins = () => {
   const { data, isFetching, isError } = useQuery("trending", getTrending);
@@ -13,7 +13,7 @@ const TopCoins = () => {
   };
 
   if (isFetching) {
-    return <TopCoinsLoader />;
+    return <Loader width={578} height={180} />;
   }
 
   if (isError) {
@@ -23,7 +23,9 @@ const TopCoins = () => {
   let filteredData: Array<ITrending> = [];
 
   if (data) {
-    filteredData = data.filter((trending) => trending.usdPrice > 0).slice(0, 3);
+    filteredData = data
+      .filter((trending) => Number(trending.usdPrice.toFixed(2)) > 0)
+      .slice(0, 3);
   }
 
   return (
@@ -32,8 +34,9 @@ const TopCoins = () => {
         <img
           src="https://s2.coinmarketcap.com/static/cloud/img/TrendingIcon.png?_=1f9e116"
           alt="Trending"
+          className={styles.card__headerIcon}
         />
-        <h2>Trending</h2>
+        <h2 className={styles.card__headerTitle}>Trending</h2>
       </div>
       <ul className={styles.card__coinList}>
         {filteredData &&
@@ -53,10 +56,8 @@ const TopCoins = () => {
               <p className={styles.card__symbol}>
                 {coin.symbol.toLocaleUpperCase()}
               </p>
-              <p className={styles.cardBody}>
-                <span className={styles.usdPrice}>
-                  USD Price: {coin.usdPrice.toFixed(2)}
-                </span>
+              <p className={styles.card__usdPrice}>
+                USD Price: {coin.usdPrice.toFixed(2)}
               </p>
             </li>
           ))}

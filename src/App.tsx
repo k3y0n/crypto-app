@@ -7,7 +7,7 @@ import Home from "./pages/HomePage/HomePage";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { SortSettings } from "./types/sort";
 import styles from "./App.module.scss";
-import CoinTableLoader from "./components/CoinTable/CoinTableLoader";
+import Loader from "./components/Loader/Loader";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,7 @@ function App() {
     direction: "asc",
   });
 
-  const { data, isFetching, isError } = useQuery(["coins"], () =>
+  const { data, isLoading, isError } = useQuery(["coins"], () =>
     getCoins(sortSettings.column, sortSettings.direction, currentPage)
   );
 
@@ -31,6 +31,10 @@ function App() {
       return { ...prevSettings, column };
     });
   };
+
+  if (isLoading) {
+    return <Loader width={600} height={400} />;
+  }
 
   if (isError) {
     return <div>Error fetching data</div>;
@@ -56,7 +60,6 @@ function App() {
         <Route path="/coin/:id" element={<CoinPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      {isFetching && <CoinTableLoader />}
     </div>
   );
 }

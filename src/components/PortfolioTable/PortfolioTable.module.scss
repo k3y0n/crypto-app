@@ -32,3 +32,23 @@
     max-height: 30px;
   }
 }
+
+@media (max-width: 540px) {
+  table thead {
+    display: none;
+  }
+  table tr {
+    display: block;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e8e9eb;
+  }
+  table td {
+    display: block;
+    text-align: right;
+  }
+  table td:before {
+    content: attr(aria-label);
+    float: left;
+    font-weight: bold;
+  }
+}

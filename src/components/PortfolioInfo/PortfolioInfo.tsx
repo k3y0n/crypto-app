@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import Badge from "../../ui/Badge/Badge";
 import styles from "./PortfolioInfo.module.scss";
 import Modal from "../../ui/Modal/Modal";
-import PortfolioInfoLoader from "./PortfolioInfoLoader";
 import { PortfolioInfoProps } from "./PortfolioInfoProps";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
+import Loader from "../Loader/Loader";
 
 const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
   value,
   coinsData,
   coinPrices,
 }) => {
-  const [portfolio, setPortfolio] = useLocalStorage([], "portfolio");
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,7 +18,7 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
   }, []);
 
   if (isLoading) {
-    return <PortfolioInfoLoader />;
+    return <Loader width={577} height={180} />;
   }
 
   const openModal = () => {

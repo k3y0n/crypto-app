@@ -77,8 +77,8 @@ const CoinTable: React.FC<CoinTableProps> = ({
                     gap: "10px",
                   }}
                 >
-                  <img src={coin.image} alt={coin.name} />
-                  {coin.name}
+                  <span><img src={coin.image} alt={coin.name} /></span>
+                  <span>{coin.name}</span>
                 </span>
               </td>
               <td>{coin.current_price}$</td>

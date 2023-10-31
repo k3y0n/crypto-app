@@ -4,6 +4,8 @@
   padding: 0;
   display: flex;
   justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 
   li {
     margin: 0 4px;
@@ -30,5 +32,11 @@
         color: #ffffff;
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    font-size: 10px;
   }
 }

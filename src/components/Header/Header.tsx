@@ -8,6 +8,7 @@ import { getCoinPrices } from "../../lib/api";
 import { useQuery } from "react-query";
 import { ICoin } from "../../types/coin";
 import styles from "./Header.module.scss";
+import Loader from "../Loader/Loader";
 
 const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
   const portfolioData = localStorage.getItem("portfolio");
@@ -22,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
   } = useQuery(["coinsCurrentPrice", coinIds], () => getCoinPrices(coinIds));
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader width={1216} height={300} />;
   }
 
   if (isError) {
@@ -33,17 +34,15 @@ const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
     <header className={styles.header}>
       <div className={styles.header__top}>
         <TopCoins />
-        {coinPrices && (
+        {coinPrices ? (
           <PortfolioInfo
             value={totalPortfolioValue}
             coinsData={portfolio}
             coinPrices={coinPrices}
           />
-        )}
+        ) : null}
       </div>
-      <div className={styles.search}>
-        <Search search={search} handleSearch={handleSearch} />
-      </div>
+      <Search search={search} handleSearch={handleSearch} />
     </header>
   );
 };

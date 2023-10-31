@@ -1,23 +1,21 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import { getCoin, getCoinChart } from "../../lib/api";
+import { getCoin } from "../../lib/api";
 import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
 import Modal from "../../ui/Modal/Modal";
-import CoinPageLoader from "./CoinPageLoader";
 import ChartCoin from "../../components/ChartCoin/ChartCoin";
+import Loader from "../../components/Loader/Loader";
 
 const CoinPage = () => {
   const { id } = useParams() as { id: string };
-  const [day, setDay] = useState(1);
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState("Day");
 
-  const { data, isLoading, isError } = useQuery(["chart", id, day], () =>
-    getCoinChart(id, day)
+  const [isVisible, setIsVisible] = useState(false);
+
+  const { data, isLoading, isError } = useQuery(["coin", id], () =>
+    getCoin(id)
   );
-  const coinData = useQuery(["coin", id], () => getCoin(id));
 
   const handleClick = () => {
     setIsVisible(!isVisible);
@@ -28,7 +26,7 @@ const CoinPage = () => {
   };
 
   if (isLoading) {
-    return <CoinPageLoader />;
+    return <Loader width={1200} height={700} />;
   }
 
   if (isError) {
@@ -40,41 +38,35 @@ const CoinPage = () => {
       <Link to="/" className={styles.back}>
         Back to Table
       </Link>
-      {coinData.data && (
+      {data && (
         <div className={styles.coinInfo}>
           <p className={styles.coinHeader}>
-            <img src={coinData.data.image} alt={coinData.data.name} />
-            <span id={coinData.data.id.toString()}>{coinData.data.name}</span>
+            <img src={data.image} alt={data.name} />
+            <span id={data.id.toString()}>{data.name}</span>
           </p>
           <div className={styles.coinInfoBody}>
             <div>
-              <p>Symbol: {coinData.data.symbol}</p>
-              <p>Rank: {coinData.data.market_cap_rank}</p>
-              <p>Supply: {coinData.data.total_supply}</p>
+              <p>Symbol: {data.symbol}</p>
+              <p>Rank: {data.market_cap_rank}</p>
+              <p>Supply: {data.total_supply}</p>
             </div>
             <div>
-              <p>Price: {coinData.data.current_price}$</p>
-              <p>Market Cap: {coinData.data.market_cap}$</p>
-              <p>Max Supply: {coinData.data.max_supply}</p>
+              <p>Price: {data.current_price}$</p>
+              <p>Market Cap: {data.market_cap}$</p>
+              <p>Max Supply: {data.max_supply}</p>
             </div>
           </div>
-          <Button onClick={handleClick}>Add Coins</Button>
+          <Button onClick={handleClick} label={"Add Coins"} />
         </div>
       )}
-      {data && (
-        <ChartCoin
-          data={data}
-          currentOptions={selectedOptions}
-          setDay={setDay}
-          setOptions={setSelectedOptions}
-        />
-      )}
-      {isVisible && coinData.data && (
+
+      <ChartCoin id={id} />
+      {isVisible && data && (
         <Modal
           isVisible={isVisible}
           selectedComponent={"Form"}
           onClose={onCloseModal}
-          coinData={coinData.data}
+          coinData={data}
         />
       )}
     </div>
