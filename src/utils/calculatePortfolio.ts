@@ -1,10 +1,12 @@
-import { PortfolioItem } from "../types/portfolio";
+import { ICoin } from "../types/coin";
 
-export function calculatePortfolioValue(coins: PortfolioItem[]): number {
-  return coins.reduce((acc: number, coin: PortfolioItem): number => {
-    coin.list.forEach((transaction) => {
-      acc += transaction.totalSum;
-    });
+export function calculatePortfolioValue(coins: ICoin[]): number {
+  return coins.reduce((acc: number, coin: ICoin): number => {
+    if (coin.list) {
+      coin.list.forEach((transaction) => {
+        acc += transaction.totalSum;
+      });
+    }
     return acc;
   }, 0);
 }

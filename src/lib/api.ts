@@ -10,7 +10,7 @@ interface IBTC {
   };
 }
 
-interface ITrendinCoin {
+interface ITrendingCoin {
   item: {
     id: string;
     name: string;
@@ -36,7 +36,7 @@ export const getCoins = async (
 ): Promise<ICoin[]> => {
   const orderBy =
     direction && query === "" ? "market_cap_desc" : query + "_" + direction;
-  const responce = await axios.get(
+  const response = await axios.get(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=false&locale=en&precision=2`,
     {
       params: {
@@ -49,14 +49,14 @@ export const getCoins = async (
     }
   );
 
-  const { data } = responce;
+  const { data } = response;
   return data.filter(
     (coin: ICoin) => coin.current_price.toFixed(2) && coin.market_cap > 0
   );
 };
 
 export const getCoin = async (id: string): Promise<ICoin> => {
-  const responce = await axios.get(
+  const response = await axios.get(
     `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}&precision=2`,
     {
       headers: {
@@ -65,7 +65,7 @@ export const getCoin = async (id: string): Promise<ICoin> => {
     }
   );
 
-  const { data } = responce;
+  const { data } = response;
   return data[0];
 };
 
@@ -73,7 +73,7 @@ export const getCoinChart = async (
   id: string,
   day: number
 ): Promise<IChart> => {
-  const responce = await axios.get(
+  const response = await axios.get(
     `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${day}`,
     {
       headers: {
@@ -82,7 +82,7 @@ export const getCoinChart = async (
     }
   );
 
-  const { data } = responce;
+  const { data } = response;
   return data;
 };
 
@@ -101,7 +101,7 @@ const getBTCPrice = async (): Promise<IBTC> => {
   return data.bitcoin.usd;
 };
 
-const getTrendingData = async (): Promise<Array<ITrendinCoin>> => {
+const getTrendingData = async (): Promise<Array<ITrendingCoin>> => {
   const response = await axios.get(
     `https://api.coingecko.com/api/v3/search/trending`,
     {
@@ -119,7 +119,7 @@ export const getTrending = async (): Promise<ITrending[]> => {
   const coins = await getTrendingData();
   const priceBTC = await getBTCPrice();
 
-  const trendingData = coins.map((coin: ITrendinCoin) => {
+  const trendingData = coins.map((coin: ITrendingCoin) => {
     const { id, name, symbol, thumb, price_btc } = coin.item;
     const usdPrice = typeof priceBTC === "number" ? price_btc * priceBTC : 0;
 

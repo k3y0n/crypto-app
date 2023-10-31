@@ -8,7 +8,6 @@ const Modal: React.FC<ModalProps> = ({
   isVisible,
   onClose,
   coinData,
-  portfolioData,
   selectedComponent,
 }) => {
   useEffect(() => {
@@ -38,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({
         {selectedComponent === "Form" && coinData ? (
           <Form coinData={coinData} />
         ) : (
-          portfolioData && <PortfolioTable coins={portfolioData} />
+          <PortfolioTable />
         )}
       </div>
     </div>

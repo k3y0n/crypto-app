@@ -1,11 +1,16 @@
-import { PortfolioItem } from "../../types/portfolio";
-import Button from "../../ui/Button/Button";
-import { PortfolioTableProps } from "./PortfolioTableProps";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import styles from "./PortfolioTable.module.scss";
 import { useNavigate } from "react-router-dom";
+import { ICoin } from "../../types/coin";
+import Button from "../../ui/Button/Button";
 
-const PortfolioTable: React.FC<PortfolioTableProps> = ({ coins }) => {
+const PortfolioTable = () => {
+  const headers = [
+    { key: "symbol", label: "Symbol" },
+    { key: "coin", label: "Coin" },
+    { key: "total", label: "Total" },
+    { key: "actions", label: "Delete" },
+  ];
   const [portfolio, setPortfolio] = useLocalStorage([], "portfolio");
   const navigate = useNavigate();
 
@@ -13,45 +18,50 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ coins }) => {
     e.stopPropagation();
     e.preventDefault();
 
-    const updatedPortfolio = portfolio.filter(
-      (item: PortfolioItem) => item.id !== id
-    );
+    const updatedPortfolio = portfolio.filter((item: ICoin) => item.id !== id);
 
     setPortfolio(updatedPortfolio);
   };
 
   const handleClick = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
+    e.stopPropagation();
     navigate(`/coin/${id}`);
   };
 
   return (
     <>
-      <h2>My Coins</h2>
-      {coins ? (
+      {portfolio.length ? (
         <table className={styles.coinTable}>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Logo</th>
-              <th>Symbol</th>
-              <th>Total</th>
-              <th>Action</th>
+              {headers.map((item) => (
+                <td key={item.key}>{item.label}</td>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {coins.map((coin: PortfolioItem) => (
+            {portfolio.map((coin: ICoin) => (
               <tr onClick={(e) => handleClick(e, coin.id)} key={coin.id}>
-                <td>{coin.id.toUpperCase()}</td>
-                <td>
-                  <img src={coin.image} alt={coin.symbol} />
-                </td>
                 <td>{coin.symbol.toUpperCase()}</td>
+                <td>
+                  <span
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <img src={coin.image} alt={coin.name} />
+                    {coin.name}
+                  </span>
+                </td>
 
                 <td>{coin.count}</td>
                 <td>
                   <Button
-                    label={"Delet coin"}
+                    label={"Delete coin"}
                     onClick={(e) => handleDelete(e, coin.id)}
                     className={"button-delete"}
                   />
@@ -61,7 +71,7 @@ const PortfolioTable: React.FC<PortfolioTableProps> = ({ coins }) => {
           </tbody>
         </table>
       ) : (
-        "No coins available"
+        <div>Empty</div>
       )}
     </>
   );

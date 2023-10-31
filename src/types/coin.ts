@@ -10,4 +10,10 @@ export interface ICoin {
   price_change_percentage_24h: number;
   total_supply: number;
   max_supply: number;
+  count:number;
+  list: {
+    coins: number;
+    buyPrice: number;
+    totalSum: number;
+  }[];
 }

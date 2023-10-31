@@ -44,6 +44,7 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
       const newItem = {
         id: coinData.id,
         symbol: coinData.symbol,
+        name: coinData.name,
         image: coinData.image,
         count: Number(quantity),
         list: [
@@ -98,9 +99,7 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
           </label>
           {errors.quantity && <span>{errors.quantity.message}</span>}
         </div>
-        <Button type="submit" disabled={!isValid}>
-          Add
-        </Button>
+        <Button type="submit" disabled={!isValid} label={'Add'}/>
       </form>
     </div>
   );

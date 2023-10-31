@@ -22,8 +22,10 @@ const Home: React.FC<HomeProps> = ({
     if (search.trim() === "") {
       setSearchResults(coins);
     } else {
-      const results = coins.filter((coin) =>
-        coin.symbol.toLowerCase().includes(search.toLowerCase())
+      const results = coins.filter(
+        (coin) =>
+          coin.symbol.toLowerCase().includes(search.toLowerCase()) &&
+          Number(coin.current_price.toFixed(2)) > 0
       );
       setSearchResults(results);
     }
@@ -39,7 +41,7 @@ const Home: React.FC<HomeProps> = ({
   ];
 
   const totalPages = calculateTotalPages(
-    searchResults.length > 0 ? searchResults.length : coins.length || 0
+    searchResults.length > 0 ? searchResults.length : coins.length
   );
 
   const [startIndex, endIndex] = getPageSlice(currentPage);
@@ -49,8 +51,10 @@ const Home: React.FC<HomeProps> = ({
       ? searchResults.slice(startIndex, endIndex)
       : coins.slice(startIndex, endIndex);
 
+  const searchResultsSliced = searchResults.slice(startIndex, endIndex);
+
   const filteredCoins = displayedCoins.filter(
-    (item: ICoin) => item.current_price > 0
+    (item: ICoin) => Number(item.current_price.toFixed(2)) > 0
   );
 
   const sortedCoins = _.sortBy(filteredCoins, [sortSettings.column]) as ICoin[];
@@ -65,16 +69,18 @@ const Home: React.FC<HomeProps> = ({
       {searchResults.length > 0 && search !== "" ? (
         <>
           <CoinTable
-            coins={searchResults}
+            coins={searchResultsSliced}
             headers={headers}
             handleSort={handleSort}
             sortSettings={sortSettings}
           />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+          {searchResultsSliced.length !== 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </>
       ) : searchResults.length ? (
         <>

@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { PortfolioItem } from "../../types/portfolio";
 import Badge from "../../ui/Badge/Badge";
 import styles from "./PortfolioInfo.module.scss";
 import Modal from "../../ui/Modal/Modal";
 import PortfolioInfoLoader from "./PortfolioInfoLoader";
-
-interface PortfolioInfoProps {
-  value: number;
-  coinsData: PortfolioItem[];
-  coinPrices: { [id: string]: number };
-}
+import { PortfolioInfoProps } from "./PortfolioInfoProps";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
   value,
   coinsData,
   coinPrices,
 }) => {
+  const [portfolio, setPortfolio] = useLocalStorage([], "portfolio");
   const [isVisible, setIsVisible] = useState(false);
-  const [isloading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(false);
   }, []);
 
-  if (isloading) {
+  if (isLoading) {
     return <PortfolioInfoLoader />;
   }
 
@@ -36,58 +32,45 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
 
   let totalChange = 0;
 
-  if (coinPrices.length === 0) {
-    return (
-      <div className={styles["portfolio-card"]}>
-        <div className={styles["no-coin-message"]}>No coin in portfolio</div>
-      </div>
-    );
-  }
-
   coinsData.forEach((coin) => {
-    const currentPrice = coinPrices[coin.id];
-    const buyPrice = coin.list[0].buyPrice;
-    totalChange += (currentPrice - buyPrice) * coin.count;
+    if (coin && coin.count) {
+      const currentPrice = coinPrices[coin.id];
+      const buyPrice = (coin.list && coin.list[0].buyPrice) || 0;
+      totalChange += (currentPrice - buyPrice) * coin.count;
+    }
   });
 
-  const percentageChange = isNaN((totalChange / value) * 100)
-    ? 0
-    : ((totalChange / value) * 100).toFixed(2);
-
-  if (percentageChange === 0) {
-    return (
-      <div className={styles["portfolio-card"]}>
-        <div className={styles["no-coin-message"]}>No coin in portfolio</div>
-      </div>
-    );
-  }
+  const percentageChange = ((totalChange / value) * 100).toFixed(2);
 
   return (
-    <div className={styles.portfolio} onClick={openModal}>
-      <h2>My Portfolio</h2>
-      <div className={styles.portfolio__balance}>
-        <p> Balance {value.toFixed(2)} USD</p>
-        <p>Change {totalChange.toFixed(2)} USD</p>
-        <p>
-          <Badge
-            value={`${
-              Number(percentageChange) > 0
-                ? `${percentageChange}+%`
-                : `${percentageChange}-%`
-            }`}
-            color={Number(percentageChange) > 0 ? "green" : "red"}
-          />
-        </p>
-      </div>
-      {isVisible && coinsData && (
-        <Modal
-          isVisible={isVisible}
-          onClose={onCloseModal}
-          selectedComponent={""}
-          portfolioData={coinsData}
-        />
-      )}
-    </div>
+    <>
+      {coinsData.length ? (
+        <div className={styles.portfolio} onClick={openModal}>
+          <h2>My Portfolio</h2>
+          <div className={styles.portfolio__balance}>
+            <p> Balance {value.toFixed(2)} USD</p>
+            <p>Change {totalChange.toFixed(2)} USD</p>
+            <p>
+              <Badge
+                value={`${
+                  Number(percentageChange) > 0
+                    ? `+${percentageChange}%`
+                    : `${percentageChange}%`
+                }`}
+                color={Number(percentageChange) > 0 ? "green" : "red"}
+              />
+            </p>
+          </div>
+          {isVisible && (
+            <Modal
+              isVisible={isVisible}
+              onClose={onCloseModal}
+              selectedComponent={""}
+            />
+          )}
+        </div>
+      ) : null}
+    </>
   );
 };
 

@@ -4,9 +4,9 @@ import { HeaderProps } from "./HeaderProps";
 import TopCoins from "../TopCoins/TopCoins";
 import PortfolioInfo from "../PortfolioInfo/PortfolioInfo";
 import { calculatePortfolioValue } from "../../utils/calculatePortfolio";
-import { PortfolioItem } from "../../types/portfolio";
 import { getCoinPrices } from "../../lib/api";
 import { useQuery } from "react-query";
+import { ICoin } from "../../types/coin";
 import styles from "./Header.module.scss";
 
 const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
@@ -14,14 +14,14 @@ const Header: React.FC<HeaderProps> = ({ handleSearch, search }) => {
   const portfolio = portfolioData ? JSON.parse(portfolioData) : [];
   const totalPortfolioValue = calculatePortfolioValue(portfolio);
 
-  const coinIds = portfolio.map((coin: PortfolioItem) => coin.id);
+  const coinIds = portfolio.map((coin: ICoin) => coin.id);
   const {
     data: coinPrices,
-    isFetching,
+    isLoading,
     isError,
   } = useQuery(["coinsCurrentPrice", coinIds], () => getCoinPrices(coinIds));
 
-  if (isFetching) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 

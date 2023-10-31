@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { PortfolioItem } from "../types/portfolio";
+import { ICoin } from "../types/coin";
 
-export const useLocalStorage = (state: PortfolioItem[], key: string) => {
+export const useLocalStorage = (state: ICoin[], key: string) => {
   const getValue = () => {
     const storage = localStorage.getItem(key);
 
