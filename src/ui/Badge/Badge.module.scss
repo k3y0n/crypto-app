@@ -1,0 +1,16 @@
+.badge {
+  width: 80px;
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  &.green {
+    background-color: #4caf50;
+    color: #ffffff;
+  }
+
+  &.red {
+    background-color: #f44336;
+    color: #ffffff;
+  }
+}
