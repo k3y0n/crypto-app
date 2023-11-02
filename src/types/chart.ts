@@ -1,3 +1,5 @@
 export interface IChart {
-  prices: [number, number][];
+  priceUsd: number;
+  time: number;
+  date: string;
 }

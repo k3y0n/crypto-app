@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import moment from "moment";
 import { ChartCoinProps } from "./ChartCoin.Props";
+import { IChart } from "../../types/chart";
 
 ChartJS.register(
   CategoryScale,
@@ -39,20 +40,24 @@ const ChartCoin: React.FC<ChartCoinProps> = ({ data, selectedOptions }) => {
     maintainAspectRatio: false,
   };
 
+  console.log(data);
+
   const labels =
-    data?.prices?.map((item: [number, number]) => {
+    data?.map((item: IChart) => {
       return moment
-        .unix(item[0] / 1000)
-        .format(selectedOptions === "Day" ? "HH:MM" : "MM-DD");
+        .unix(item.time / 1000 / 1000)
+        .format(selectedOptions === "Day" ? "HH:mm" : "MM-DD");
     }) ?? [];
+
+    console.log(labels);
 
   const dataChart: ChartData<"line"> = {
     labels: labels,
     datasets: [
       {
         data:
-          data?.prices?.map((item: [number, number]) => {
-            return item[1];
+          data?.map((item: IChart) => {
+            return item.priceUsd;
           }) ?? [],
         borderColor: "rgb(0, 0, 100)",
         backgroundColor: "rgba(0, 99, 132, 0.5)",

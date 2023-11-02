@@ -1,22 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ICoin } from "../../types/coin";
-import Modal from "../../ui/Modal/Modal";
-import styles from "./CoinTable.module.scss";
+import { ICoin } from "../../types";
 import { CoinTableProps } from "./CoinTableProps";
-import { Caret } from "../../ui/Caret/Caret";
-import Badge from "../../ui/Badge/Badge";
 import Button from "../../ui/Button/Button";
+import { SortSettings } from "../../types";
+import { Caret } from "../../ui/Caret/Caret";
+import _ from "lodash";
+import styles from "./CoinTable.module.scss";
+import Modal from "../../ui/Modal/Modal";
+import { formatPrice } from "../../utils/formatPrice";
 
-const CoinTable: React.FC<CoinTableProps> = ({
-  coins,
-  headers,
-  sortSettings,
-  handleSort,
-}) => {
-  const [isVisible, setIsVisible] = useState(false);
+const CoinTable = ({ coins }: CoinTableProps) => {
+  const [sortSettings, setSortSettings] = useState<SortSettings>({
+    column: "",
+    direction: "asc",
+  });
   const [coinData, setCoinData] = useState<ICoin>();
+  const [activeSort, setActiveSort] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
+
+  const isActive = sortSettings.column === activeSort;
+  const headers = [
+    { key: "symbol", label: "Symbol" },
+    { key: "logo", label: "Logo Coin" },
+    { key: "priceUsd", label: "Price in (USD)" },
+    { key: "marketCap", label: "Market Cap" },
+    { key: "changePercent24Hr", label: "Change 24h%" },
+    { key: "action", label: "Action" },
+  ];
 
   const handleButtonClick = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -28,6 +40,7 @@ const CoinTable: React.FC<CoinTableProps> = ({
   };
 
   const handleClick = (id: string) => {
+    console.log(id);
     navigate(`/coin/${id}`);
   };
 
@@ -35,61 +48,67 @@ const CoinTable: React.FC<CoinTableProps> = ({
     setIsVisible(false);
   };
 
+  const isClickable = (col: string) => {
+    switch (col) {
+      case "priceUsd":
+        return true;
+      case "marketCap":
+        return true;
+      case "changePercent24Hr":
+        return true;
+    }
+  };
+
+  const handleSortClick = (item: string) => {
+    if (isClickable(item)) {
+      setActiveSort(item);
+      setSortSettings((prevSettings) => {
+        if (activeSort === prevSettings.column) {
+          return {
+            column: item,
+            direction: prevSettings.direction === "asc" ? "desc" : "asc",
+          };
+        }
+        return { ...prevSettings, item };
+      });
+    }
+  };
+
+  const sortedCoins =
+    sortSettings.direction === "asc"
+      ? _.sortBy(coins, sortSettings.column)
+      : _.sortBy(coins, sortSettings.column).reverse();
+
   return (
     <>
       <table className={styles.coinTable}>
         <thead>
           <tr>
-            {headers.map((item) => {
-              const isActive = sortSettings.column === item.key;
-              const isClickable =
-                item.key !== "actions" &&
-                item.key !== "symbol" &&
-                item.key !== "logo";
-
-              const handleSortClick = () => {
-                if (isClickable) {
-                  handleSort(item.key);
-                }
-              };
-
-              return (
-                <td key={item.key} onClick={handleSortClick}>
-                  {item.label}
-                  {isActive && isClickable && (
-                    <Caret direction={sortSettings.direction} active={true} />
-                  )}
-                </td>
-              );
-            })}
+            {headers.map((item) => (
+              <td key={item.key} onClick={() => handleSortClick(item.key)}>
+                {item.label}
+                {isActive && item.key === activeSort && (
+                  <Caret direction={sortSettings.direction} />
+                )}
+              </td>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {coins.map((coin: ICoin) => (
+          {sortedCoins.map((coin: ICoin) => (
             <tr key={coin.id} onClick={() => handleClick(coin.id)}>
-              <td>{coin.symbol.toLocaleUpperCase()}</td>
-              <td>
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                  }}
-                >
-                  <span><img src={coin.image} alt={coin.name} /></span>
-                  <span>{coin.name}</span>
-                </span>
-              </td>
-              <td>{coin.current_price}$</td>
-              <td>{coin.market_cap}$</td>
-              <td>
-                <Badge
-                  value={Number(coin.price_change_percentage_24h.toFixed(2))+'%'}
-                  color={coin.price_change_percentage_24h > 0 ? "green" : "red"}
+              <td data-label="Symbol">{coin.symbol.toLocaleUpperCase()}</td>
+              <td data-label="Logo Coin" className={styles.logo}>
+                <img
+                  src={`https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`}
+                  alt={coin.name}
                 />
+                {coin.name}
               </td>
-              <td>
+              <td data-label="Price in (USD)">{formatPrice(coin.priceUsd)}$</td>
+              <td data-label="Market Cap">{formatPrice(coin.marketCapUsd)}$</td>
+              <td data-label="Change 24h%">{formatPrice(coin.changePercent24Hr)}%</td>
+              <td data-label="Action">
                 <Button
                   label={"Add"}
                   onClick={(e) => handleButtonClick(e, coin)}

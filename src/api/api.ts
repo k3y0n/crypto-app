@@ -29,62 +29,11 @@ export interface ITrending {
   image: string;
 }
 
-export const getCoins = async (
-  query?: string,
-  direction?: string,
-  page?: number
-): Promise<ICoin[]> => {
-  const orderBy =
-    direction && query === "" ? "market_cap_desc" : query + "_" + direction;
-  const response = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&sparkline=false&locale=en&precision=2`,
-    {
-      params: {
-        page: page,
-        order: orderBy,
-      },
-      headers: {
-        " x-cg-demo-api-key": API_KEY,
-      },
-    }
-  );
 
-  const { data } = response;
-  return data.filter(
-    (coin: ICoin) => coin.current_price.toFixed(2) && coin.market_cap > 0
-  );
-};
 
-export const getCoin = async (id: string): Promise<ICoin> => {
-  const response = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}&precision=2`,
-    {
-      headers: {
-        " x-cg-demo-api-key": API_KEY,
-      },
-    }
-  );
 
-  const { data } = response;
-  return data[0];
-};
 
-export const getCoinChart = async (
-  id: string,
-  day: number
-): Promise<IChart> => {
-  const response = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=usd&days=${day}`,
-    {
-      headers: {
-        " x-cg-demo-api-key": API_KEY,
-      },
-    }
-  );
 
-  const { data } = response;
-  return data;
-};
 
 const getBTCPrice = async (): Promise<IBTC> => {
   const response = await axios.get(
