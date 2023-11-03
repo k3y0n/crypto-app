@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import  { useEffect } from "react";
 import Form from "../../components/Form/Form";
 import styles from "./Modal.module.scss";
 import { ModalProps } from "./ModalProps";
 import PortfolioTable from "../../components/PortfolioTable/PortfolioTable";
 
-const Modal: React.FC<ModalProps> = ({
+const Modal  = ({
   isVisible,
   onClose,
   coinData,
   selectedComponent,
-}) => {
+}:ModalProps) => {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isVisible && onClose && !event.defaultPrevented) {

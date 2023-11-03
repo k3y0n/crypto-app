@@ -1,19 +1,17 @@
-import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "../../ui/Button/Button";
 import styles from "./Form.module.scss";
 import { FormProps } from "./FormProps";
-import { PortfolioItem } from "../../types/portfolio";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { ICoin } from "../../types";
 
 type FormData = {
   coinName: string;
   quantity: number;
 };
 
-const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
+const PortfolioForm = ({ coinData }: FormProps) => {
   const [portfolio, setPortfolio] = useLocalStorage([], "portfolio");
-
   const {
     register,
     handleSubmit,
@@ -25,10 +23,10 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     const { quantity } = data;
-    const totalSum = quantity * coinData.current_price;
+    const totalSum = quantity * coinData.priceUsd;
 
     const existingItemIndex = portfolio.findIndex(
-      (item: PortfolioItem) => item.id === coinData.id
+      (item: ICoin) => item.id === coinData.id
     );
 
     if (existingItemIndex !== -1) {
@@ -36,7 +34,7 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
       updatedPortfolio[existingItemIndex].count += Number(quantity);
       updatedPortfolio[existingItemIndex].list.push({
         coins: Number(quantity),
-        buyPrice: coinData.current_price,
+        buyPrice: coinData.priceUsd,
         totalSum,
       });
       setPortfolio(updatedPortfolio);
@@ -45,30 +43,30 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
         id: coinData.id,
         symbol: coinData.symbol,
         name: coinData.name,
-        image: coinData.image,
         count: Number(quantity),
         list: [
           {
             coins: Number(quantity),
-            buyPrice: coinData.current_price,
+            buyPrice: coinData.priceUsd,
             totalSum,
           },
         ],
       };
 
-      setPortfolio((prev: PortfolioItem[]) => [...prev, newItem]);
+      setPortfolio((prev: ICoin[]) => [...prev, newItem]);
     }
 
     reset();
   };
 
   return (
-    <div className={styles["form"]}>
+    <div className={styles.form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className={styles["form-group"]}>
-          <label id="coinName">
+        <div className={styles.formGroup}>
+          <label id="coinName" className={styles.label}>
             Название монеты:
             <input
+              className={styles.formInput}
               type="text"
               id={coinData.id}
               value={coinData.name}
@@ -78,10 +76,11 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
           </label>
           {errors.coinName && <span>{errors.coinName.message}</span>}
         </div>
-        <div className={styles["form-group"]}>
-          <label id="quantity">
+        <div className={styles.formGroup}>
+          <label id="quantity" className={styles.label}>
             Количество:
             <input
+              className={styles.formInput}
               type="number"
               id="quantity"
               {...register("quantity", {
@@ -91,15 +90,15 @@ const PortfolioForm: React.FC<FormProps> = ({ coinData }) => {
                   message: "Min 1 coin",
                 },
                 max: {
-                  value: coinData.max_supply,
-                  message: `Max ${coinData.max_supply} coin`,
+                  value: coinData.supply,
+                  message: `Max ${coinData.supply} coin`,
                 },
               })}
             />
           </label>
           {errors.quantity && <span>{errors.quantity.message}</span>}
         </div>
-        <Button type="submit" disabled={!isValid} label={'Add'}/>
+        <Button type="submit" disabled={!isValid} label={"Add"} />
       </form>
     </div>
   );

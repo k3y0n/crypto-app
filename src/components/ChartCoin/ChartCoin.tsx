@@ -28,7 +28,7 @@ type ChartOptionsWithPointStyle = Partial<
   ChartOptions<"line"> & { pointStyle: boolean }
 >;
 
-const ChartCoin: React.FC<ChartCoinProps> = ({ data, selectedOptions }) => {
+const ChartCoin  = ({ data, selectedOptions }:ChartCoinProps) => {
   const options: ChartOptionsWithPointStyle = {
     responsive: true,
     plugins: {
@@ -40,25 +40,21 @@ const ChartCoin: React.FC<ChartCoinProps> = ({ data, selectedOptions }) => {
     maintainAspectRatio: false,
   };
 
-  console.log(data);
+  const format = selectedOptions === "Day" ? "MM-DD" : "HH:mm";
 
-  const labels =
-    data?.map((item: IChart) => {
-      return moment
-        .unix(item.time / 1000 / 1000)
-        .format(selectedOptions === "Day" ? "HH:mm" : "MM-DD");
-    }) ?? [];
-
-    console.log(labels);
+  const labels = data?.map((item: IChart) => {
+    if (selectedOptions === "Day") {
+      return moment(item.date).format(format);
+    } else {
+      return moment(item.time).format(format);
+    }
+  });
 
   const dataChart: ChartData<"line"> = {
     labels: labels,
     datasets: [
       {
-        data:
-          data?.map((item: IChart) => {
-            return item.priceUsd;
-          }) ?? [],
+        data: data?.map((item: IChart) => item.priceUsd),
         borderColor: "rgb(0, 0, 100)",
         backgroundColor: "rgba(0, 99, 132, 0.5)",
       },

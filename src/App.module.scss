@@ -4,8 +4,10 @@
   box-sizing: border-box;
 }
 
-.app {
-  margin: 0 auto;
+#root {
   max-width: 1280px;
-  min-height: 100vh;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
+

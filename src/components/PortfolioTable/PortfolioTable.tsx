@@ -43,23 +43,15 @@ const PortfolioTable = () => {
           <tbody>
             {portfolio.map((coin: ICoin) => (
               <tr onClick={(e) => handleClick(e, coin.id)} key={coin.id}>
-                <td>{coin.symbol.toUpperCase()}</td>
-                <td>
-                  <span
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    <img src={coin.image} alt={coin.name} />
-                    {coin.name}
-                  </span>
+                <td data-label="symbol">{coin.symbol.toUpperCase()}</td>
+                <td data-label="coin">
+                  <img
+                    src={`https://assets.coincap.io/assets/icons/${coin.symbol.toLowerCase()}@2x.png`}
+                    alt={coin.name}
+                  />
                 </td>
-
-                <td>{coin.count}</td>
-                <td>
+                <td data-label="total">{coin.count}</td>
+                <td data-label="actions">
                   <Button
                     label={"Delete coin"}
                     onClick={(e) => handleDelete(e, coin.id)}

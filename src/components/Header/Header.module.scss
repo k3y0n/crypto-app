@@ -4,19 +4,19 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
 
-  &__top {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
+.header__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
 
-  @media (min-width: 786px) {
-    &__top {
-      flex-direction: row;
-      justify-content: center;
-      width: 100%;
-    }
+@media (min-width: 786px) {
+  .header__top {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
   }
 }

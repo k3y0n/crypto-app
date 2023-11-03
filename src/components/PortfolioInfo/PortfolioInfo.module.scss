@@ -8,14 +8,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+}
 
-  &__balance {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
+.portfolio__balance {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .portfolio:hover {

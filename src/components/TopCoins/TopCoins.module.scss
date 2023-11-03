@@ -7,42 +7,34 @@
   border-radius: 8px;
   box-shadow: rgba(88, 102, 126, 0.08) 0px 4px 24px,
     rgba(88, 102, 126, 0.12) 0px 1px 2px;
-  &__header {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  &__coinList {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  &__coinIndex {
-    color: #858ca2;
-  }
+}
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
-  &__coinLogo {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-  }
+.card__coinList {
+  margin-top: 20px;
+  padding: 20px;
+}
 
-  &__coinCard {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-  }
+.card__coinCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  text-align: center;
+}
 
-  &__title {
-    font-weight: 800;
-    font-size: 12px;
-  }
+.card__symbol,.card__name{
+  width: 100px;
+  display: flex;
+  justify-content: center;
+}
 
-  &__symbol {
-    color: #858ca2;
-    font-size: 12px;
-  }
+.card__usdPrice {
+  width: 180px;
 }
 
 li:hover {

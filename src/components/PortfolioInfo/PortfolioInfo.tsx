@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState,memo } from "react";
 import Badge from "../../ui/Badge/Badge";
+import { calculatePortfolioValue } from "../../utils/calculatePortfolio";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { ICoin } from "../../types";
+import { getCoinsPrices } from "../../api";
+import { useQuery } from "react-query";
 import styles from "./PortfolioInfo.module.scss";
-import Modal from "../../ui/Modal/Modal";
-import { PortfolioInfoProps } from "./PortfolioInfoProps";
 import Loader from "../Loader/Loader";
+import Modal from "../../ui/Modal/Modal";
 
-const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
-  value,
-  coinsData,
-  coinPrices,
-}) => {
+const PortfolioInfo = () => {
+  const [portfolio, _] = useLocalStorage([], "portfolio");
   const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
-    return <Loader width={577} height={180} />;
-  }
 
   const openModal = () => {
     setIsVisible(!isVisible);
@@ -28,48 +20,62 @@ const PortfolioInfo: React.FC<PortfolioInfoProps> = ({
     setIsVisible(!isVisible);
   };
 
+  const totalPortfolioValue = calculatePortfolioValue(portfolio);
+  const coinIds = portfolio.map((coin: ICoin) => coin.id);
+
+  const { data, isSuccess, isLoading, isError } = useQuery(
+    ["coinsCurrentPrice", coinIds],
+    () => getCoinsPrices(coinIds)
+  );
+
   let totalChange = 0;
 
-  coinsData.forEach((coin) => {
-    if (coin && coin.count) {
-      const currentPrice = coinPrices[coin.id];
-      const buyPrice = (coin.list && coin.list[0].buyPrice) || 0;
-      totalChange += (currentPrice - buyPrice) * coin.count;
+  portfolio.forEach((coin: ICoin) => {
+    if (data && coin.list) {
+      coin.list.forEach((listItem: any) => {
+        const currentPrice = data[coin.id];
+        const buyPrice = listItem.buyPrice || 0;
+        totalChange += (currentPrice - buyPrice) * coin.count;
+      });
     }
   });
 
-  const percentageChange = ((totalChange / value) * 100).toFixed(2);
+  const percentageChange = ((totalChange / totalPortfolioValue) * 100).toFixed(
+    2
+  );
+
+  const percentageChangeDisplay =
+    Number(percentageChange) > 0
+      ? `+${percentageChange}%`
+      : `${percentageChange}%`;
+
+  const badgeColor = Number(percentageChange) > 0 ? "green" : "red";
 
   return (
     <>
-      {coinsData.length ? (
+      {isSuccess && (
         <div className={styles.portfolio} onClick={openModal}>
           <h2>My Portfolio</h2>
           <div className={styles.portfolio__balance}>
-            <p> Balance {value.toFixed(2)} USD</p>
+            <p> Balance {totalPortfolioValue.toFixed(2)} USD</p>
             <p>Change {totalChange.toFixed(2)} USD</p>
             <p>
-              <Badge
-                value={`${
-                  Number(percentageChange) > 0
-                    ? `+${percentageChange}%`
-                    : `${percentageChange}%`
-                }`}
-                color={Number(percentageChange) > 0 ? "green" : "red"}
-              />
+              <Badge value={percentageChangeDisplay} color={badgeColor} />
             </p>
           </div>
-          {isVisible && (
-            <Modal
-              isVisible={isVisible}
-              onClose={onCloseModal}
-              selectedComponent={""}
-            />
-          )}
         </div>
-      ) : null}
+      )}
+      {isVisible && (
+        <Modal
+          isVisible={isVisible}
+          onClose={onCloseModal}
+          selectedComponent={""}
+        />
+      )}
+      {isLoading && <Loader width={577} height={180} />}
+      {isError && "Error receiving prices for portfolio coins"}
     </>
   );
 };
 
-export default PortfolioInfo;
+export default memo(PortfolioInfo);

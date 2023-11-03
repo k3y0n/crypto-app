@@ -4,6 +4,6 @@ interface CaretProps {
   direction: "asc" | "desc";
 }
 
-export const Caret: React.FC<CaretProps> = ({ direction }) => {
+export const Caret = ({ direction }: CaretProps) => {
   return direction === "asc" ? <CaretUpFill /> : <CaretDownFill />;
 };

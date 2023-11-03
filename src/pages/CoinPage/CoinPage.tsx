@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback,memo } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { getCoin, getCoinChart } from "../../api";
@@ -6,44 +6,46 @@ import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
 import Modal from "../../ui/Modal/Modal";
 import ChartCoin from "../../components/ChartCoin/ChartCoin";
-import Loader from "../../components/Loader/Loader";
 import { formatPrice } from "../../utils/formatPrice";
+import Loader from "../../components/Loader/Loader";
 
 const CoinPage = () => {
   const { id } = useParams() as { id: string };
-  const [day, setDay] = useState(1);
-  const [selectedOptions, setSelectedOptions] = useState("Day");
-
-  const chart = useQuery(["chart", id, day], () => getCoinChart(id, day));
-
+  const [day, setDay] = useState("h1");
+  const [selectedOptions, setSelectedOptions] = useState("1H");
   const [isVisible, setIsVisible] = useState(false);
 
+  const chart = useQuery(["chart", id, day], () => getCoinChart(id, day));
   const { data, isSuccess, isLoading, isError } = useQuery(["coin", id], () =>
     getCoin(id)
   );
 
-  const handleClick = () => {
-    setIsVisible(!isVisible);
-  };
+  const iconUrl = useMemo(() => {
+    return `https://assets.coincap.io/assets/icons/${data?.symbol.toLowerCase()}@2x.png`;
+  }, [data]);
 
-  const onCloseModal = () => {
-    setIsVisible(!isVisible);
-  };
+  const handleClick = useCallback(() => {
+    setIsVisible(prev => !prev);
+  }, []);
+
+  const onCloseModal = useCallback(() => {
+    setIsVisible(prev => !prev);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedOptions(e.target.value);
-    switch (e.target.value) {
-      case "Day":
-        setDay(1);
-        break;
-      case "Week":
-        setDay(7);
-        break;
-      case "Month":
-        setDay(30);
-        break;
+  
+    const dayMap: Record<string, string> = {
+      "1H": "h1",
+      "12H": "h12",
+      "Day": "d1"
+    };
+  
+    if (dayMap[e.target.value]) {
+      setDay(dayMap[e.target.value]);
     }
   };
+  
 
   return (
     <div className={styles.coinPageContainer}>
@@ -53,22 +55,21 @@ const CoinPage = () => {
       {isSuccess && (
         <div className={styles.coinInfo}>
           <p className={styles.coinHeader}>
-            <img
-              src={`https://assets.coincap.io/assets/icons/${data.symbol.toLowerCase()}@2x.png`}
-              alt={data.name}
-            />
+            <img src={iconUrl} alt={data.name} />
             <span id={data.id.toString()}>{data.name}</span>
           </p>
           <div className={styles.coinInfoBody}>
             <div>
               <p>Symbol: {data.symbol}</p>
               <p>Rank: {data.rank}</p>
-              <p>Supply: {data.supply}</p>
+              <p>Supply: {formatPrice(data.supply)}</p>
             </div>
             <div>
-              <p>Price: {formatPrice(data.priceUsd)}$</p>
+              <p>Price: {formatPrice(Number(data.priceUsd))}$</p>
               <p>Market Cap: {formatPrice(data.marketCapUsd)}$</p>
-              <p>Max Supply: {formatPrice(data.maxSupply)}</p>
+              {data.maxSupply && (
+                <p>Max Supply: {formatPrice(data.maxSupply)}</p>
+              )}
             </div>
           </div>
           <Button onClick={handleClick} label={"Add Coins"} />
@@ -79,9 +80,9 @@ const CoinPage = () => {
         onChange={(e) => handleChange(e)}
         value={selectedOptions}
       >
+        <option value="1H">1H</option>
+        <option value="12H">12H</option>
         <option value="Day">Day</option>
-        <option value="Week">Week</option>
-        <option value="Month">Month</option>
       </select>
       {chart.data && (
         <ChartCoin data={chart.data} selectedOptions={selectedOptions} />
@@ -100,4 +101,4 @@ const CoinPage = () => {
   );
 };
 
-export default CoinPage;
+export default memo(CoinPage);

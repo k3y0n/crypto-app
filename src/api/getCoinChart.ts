@@ -3,27 +3,12 @@ import { IChart } from "../types/chart";
 
 export const getCoinChart = async (
   id: string,
-  numberOfDays: number
+  numberOfDays: string
 ): Promise<IChart[]> => {
-  let start: number = 0;
-  let end: number = 0;
-
-  const now = Date.now();
-
-  if (numberOfDays === 1) {
-    start = now - 24 * 60 * 60 * 1000;
-    end = now;
-  } else if (numberOfDays === 7) {
-    start = now - 7 * 24 * 60 * 60 * 1000;
-    end = now;
-  } else if (numberOfDays === 30) {
-    start = now - 30 * 24 * 60 * 60 * 1000;
-    end = now;
-  }
 
   try {
     const response = await axios.get(
-      `https://api.coincap.io/v2/assets/${id}/history?interval=d1&start=${start}&end=${end}`
+      `https://api.coincap.io/v2/assets/${id}/history?interval=${numberOfDays}`
     );
     const { data } = response;
 

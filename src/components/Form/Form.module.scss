@@ -3,40 +3,36 @@
   margin: 0 auto;
   padding: 20px;
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-  form {
-    display: flex;
-    flex-direction: column;
+.portfolio-summary {
+  margin-top: 20px;
+  cursor: pointer;
 
-    div {
-      margin-bottom: 20px;
-
-      label {
-        margin-bottom: 5px;
-      }
-
-      input {
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      span {
-        color: red;
-        font-size: 14px;
-      }
-    }
+  &:hover {
+    text-decoration: underline;
   }
+}
 
-  .portfolio-summary {
-    margin-top: 20px;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-    }
+.formGroup {
+  margin-bottom: 20px;
+  span {
+    color: red;
+    font-size: 14px;
   }
+}
+
+.formInput {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.label {
+  margin-bottom: 5px;
 }

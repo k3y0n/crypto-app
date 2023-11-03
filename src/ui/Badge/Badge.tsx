@@ -1,8 +1,7 @@
-import React from "react";
 import styles from "./Badge.module.scss";
 import { BadgeProps } from "./BadgeProps";
 
-const Badge: React.FC<BadgeProps> = ({ value, color }) => {
+const Badge = ({ value, color }: BadgeProps) => {
   return <span className={`${styles.badge} ${styles[color]}`}>{value}</span>;
 };
 

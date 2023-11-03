@@ -1,5 +1,4 @@
 export const formatPrice = (price: number) => {
-  console.log(price);
   if (price >= 1e9) {
     return (price / 1e9).toFixed(2) + "b";
   } else if (price >= 1e6) {

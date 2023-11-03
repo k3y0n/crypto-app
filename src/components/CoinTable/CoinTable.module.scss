@@ -1,17 +1,11 @@
 .coinTable {
   width: 100%;
+  max-height: 800px;
 }
 
 .coinTable img {
   width: 30px;
   height: 30px;
-}
-
-.logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
 }
 
 .coinTable tr td {

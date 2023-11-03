@@ -5,7 +5,7 @@ interface LoaderProps {
   height: number;
 }
 
-const Loader: React.FC<LoaderProps> = ({ width, height }) => (
+const Loader = ({ width, height }: LoaderProps) => (
   <ContentLoader
     speed={2}
     viewBox="0 0 600 400"

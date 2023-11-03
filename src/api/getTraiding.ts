@@ -1,11 +1,8 @@
 import axios from "axios";
 import { ICoin } from "../types/coin";
 
-export const getCoins = async (page: number): Promise<ICoin[]> => {
-  const offset = 10 * (page - 1);
-  const response = await axios.get(
-    `https://api.coincap.io/v2/assets?limit=10&offset=${offset}`
-  );
+export const getTraiding = async (): Promise<ICoin[]> => {
+  const response = await axios.get(`https://api.coincap.io/v2/assets?limit=3`);
 
   const { data } = response;
   return data.data.map((coin: ICoin) => ({
