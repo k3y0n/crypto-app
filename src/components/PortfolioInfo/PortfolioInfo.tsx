@@ -1,6 +1,5 @@
-import { useState, memo } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import { calculatePortfolioValue } from "../../utils/calculatePortfolio";
-import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { ICoin } from "../../types";
 import { getCoinsPrices } from "../../api";
 import { useQuery } from "react-query";
@@ -8,29 +7,36 @@ import styles from "./PortfolioInfo.module.scss";
 import Loader from "../Loader/Loader";
 import Badge from "../Badge/Badge";
 import Modal from "../Modal/Modal";
+import { PortfolioInfoProps } from "./PortfolioInfoProps";
 
-const PortfolioInfo = () => {
-  const [portfolio, _] = useLocalStorage([], "portfolio");
+const PortfolioInfo = ({ coins }: PortfolioInfoProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  const openModal = () => {
-    setIsVisible(!isVisible);
-  };
-  const onCloseModal = () => {
-    setIsVisible(!isVisible);
-  };
+  const totalPortfolioValue = useMemo(
+    () => calculatePortfolioValue(coins),
+    [coins]
+  );
 
-  const totalPortfolioValue = calculatePortfolioValue(portfolio);
-  const coinIds = portfolio.map((coin: ICoin) => coin.id);
+  const coinIds = coins.map((coin: ICoin) => coin.id);
 
   const { data, isSuccess, isLoading, isError } = useQuery(
     ["coinsCurrentPrice", coinIds],
     () => getCoinsPrices(coinIds)
   );
 
+  useEffect(() => {}, [coins, data]);
+
+  const openModal = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const onCloseModal = () => {
+    setIsVisible(!isVisible);
+  };
+
   let totalChange = 0;
 
-  portfolio.forEach((coin: ICoin) => {
+  coins.forEach((coin: ICoin) => {
     if (data && coin.list) {
       coin.list.forEach((listItem: any) => {
         const currentPrice = data[coin.id];
@@ -49,7 +55,6 @@ const PortfolioInfo = () => {
       ? `+${percentageChange}%`
       : `${percentageChange}%`;
 
-
   const badgeColor = Number(percentageChange) > 0 ? "green" : "red";
 
   return (
@@ -59,7 +64,7 @@ const PortfolioInfo = () => {
           <h2>My Portfolio</h2>
           <div className={styles.portfolio__balance}>
             <p> Balance {totalPortfolioValue.toFixed(2)} USD</p>
-            <p>Change {totalChange.toFixed(2)} USD</p>
+            <p> Change {totalChange.toFixed(2)} USD</p>
             <p>
               <Badge
                 value={

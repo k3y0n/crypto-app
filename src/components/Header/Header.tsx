@@ -38,7 +38,7 @@ const Header = ({ handleSearch, search }: HeaderProps) => {
     <header className={styles.header}>
       <div className={styles.header__top}>
         <TopCoins />
-        {coins.length > 0 && <PortfolioInfo />}
+        {coins.length > 0 && <PortfolioInfo coins={coins}/>}
       </div>
       <Search search={search} handleSearch={handleSearch} />
     </header>
