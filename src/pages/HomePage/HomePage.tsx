@@ -16,7 +16,7 @@ const Home = () => {
 
   const { data, isSuccess, isLoading, isError } = useQuery(
     ["coins", currentPage, search],
-    () => getCoins(search, currentPage)
+    () => getCoins(search)
   );
 
   useEffect(() => {

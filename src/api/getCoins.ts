@@ -1,8 +1,7 @@
 import axios from "axios";
 import { ICoin } from "../types/coin";
 
-export const getCoins = async (search:string,page: number): Promise<ICoin[]> => {
-  const offset = 10 * (page - 1);
+export const getCoins = async (search: string): Promise<ICoin[]> => {
   const response = await axios.get(
     `https://api.coincap.io/v2/assets?search=${search}`
   );
