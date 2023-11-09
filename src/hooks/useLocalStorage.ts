@@ -16,6 +16,7 @@ export const useLocalStorage = (state: ICoin[], key: string) => {
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
+    window.dispatchEvent(new Event("storage"));
   }, [value, key]);
 
   return [value, setValue];
