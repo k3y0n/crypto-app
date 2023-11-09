@@ -1,9 +1,9 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import Button from "../../ui/Button/Button";
 import styles from "./Form.module.scss";
 import { FormProps } from "./FormProps";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { ICoin } from "../../types";
+import Button from "../Button/Button";
 
 type FormData = {
   coinName: string;
@@ -12,6 +12,7 @@ type FormData = {
 
 const PortfolioForm = ({ coinData }: FormProps) => {
   const [portfolio, setPortfolio] = useLocalStorage([], "portfolio");
+  
   const {
     register,
     handleSubmit,

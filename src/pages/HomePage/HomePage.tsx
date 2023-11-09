@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import CoinTable from "../../components/CoinTable/CoinTable";
 import _ from "lodash";
 import Header from "../../components/Header/Header";
 import { ICoin } from "../../types";
-import Pagination from "../../ui/Pagination/Pagination";
 import { useQuery } from "react-query";
 import { getCoins } from "../../api";
 import Loader from "../../components/Loader/Loader";
+import Pagination from "../../components/Pagination/Pagination";
 
 const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,4 +68,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default memo(Home);

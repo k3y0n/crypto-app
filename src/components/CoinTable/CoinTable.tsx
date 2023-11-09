@@ -1,15 +1,16 @@
-import { useState,useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ICoin } from "../../types";
 import { CoinTableProps } from "./CoinTableProps";
-import Button from "../../ui/Button/Button";
 
 import { SortSettings } from "../../types";
-import { Caret } from "../../ui/Caret/Caret";
 import _ from "lodash";
 import { formatPrice } from "../../utils/formatPrice";
 import styles from "./CoinTable.module.scss";
-import Modal from "../../ui/Modal/Modal";
+import Button from "../Button/Button";
+import { Caret } from "../Caret/Caret";
+import Modal from "../Modal/Modal";
+import Badge from "../Badge/Badge";
 
 const CoinTable = ({ coins }: CoinTableProps) => {
   const [sortSettings, setSortSettings] = useState<SortSettings>({
@@ -75,7 +76,7 @@ const CoinTable = ({ coins }: CoinTableProps) => {
   };
 
   const sortedCoins = useMemo(() => {
-    return sortSettings.direction === 'asc'
+    return sortSettings.direction === "asc"
       ? _.sortBy(coins, sortSettings.column)
       : _.sortBy(coins, sortSettings.column).reverse();
   }, [coins, sortSettings.column, sortSettings.direction]);
@@ -108,7 +109,10 @@ const CoinTable = ({ coins }: CoinTableProps) => {
               <td data-label="Price in (USD)">{formatPrice(coin.priceUsd)}$</td>
               <td data-label="Market Cap">{formatPrice(coin.marketCapUsd)}$</td>
               <td data-label="Change 24h%">
-                {formatPrice(coin.changePercent24Hr)}%
+                <Badge
+                  value={`${formatPrice(coin.changePercent24Hr)}%`}
+                  color={`${coin.changePercent24Hr > 0 ? "green" : "red"}`}
+                />
               </td>
               <td data-label="Action">
                 <Button

@@ -1,5 +1,4 @@
-import { useState,memo } from "react";
-import Badge from "../../ui/Badge/Badge";
+import { useState, memo } from "react";
 import { calculatePortfolioValue } from "../../utils/calculatePortfolio";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { ICoin } from "../../types";
@@ -7,7 +6,8 @@ import { getCoinsPrices } from "../../api";
 import { useQuery } from "react-query";
 import styles from "./PortfolioInfo.module.scss";
 import Loader from "../Loader/Loader";
-import Modal from "../../ui/Modal/Modal";
+import Badge from "../Badge/Badge";
+import Modal from "../Modal/Modal";
 
 const PortfolioInfo = () => {
   const [portfolio, _] = useLocalStorage([], "portfolio");
@@ -49,6 +49,7 @@ const PortfolioInfo = () => {
       ? `+${percentageChange}%`
       : `${percentageChange}%`;
 
+
   const badgeColor = Number(percentageChange) > 0 ? "green" : "red";
 
   return (
@@ -60,7 +61,14 @@ const PortfolioInfo = () => {
             <p> Balance {totalPortfolioValue.toFixed(2)} USD</p>
             <p>Change {totalChange.toFixed(2)} USD</p>
             <p>
-              <Badge value={percentageChangeDisplay} color={badgeColor} />
+              <Badge
+                value={
+                  percentageChangeDisplay === "NaN%"
+                    ? "0%"
+                    : `${percentageChange}%`
+                }
+                color={badgeColor}
+              />
             </p>
           </div>
         </div>

@@ -1,7 +1,7 @@
-import { useCallback } from "react";
+import { useCallback,memo } from "react";
 import { ChangeEvent } from "react";
-import Input from "../../ui/Input/Input";
 import { SearchProps } from "./SearchProps";
+import Input from "../Input/Input";
 
 const Search = ({ search, handleSearch }: SearchProps) => {
   const handleChange = useCallback(
@@ -21,4 +21,4 @@ const Search = ({ search, handleSearch }: SearchProps) => {
   );
 };
 
-export default Search;
+export default memo(Search);

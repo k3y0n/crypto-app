@@ -2,12 +2,12 @@ import { useState, useMemo, useCallback,memo } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { getCoin, getCoinChart } from "../../api";
-import Button from "../../ui/Button/Button";
 import styles from "./CoinPage.module.scss";
-import Modal from "../../ui/Modal/Modal";
 import ChartCoin from "../../components/ChartCoin/ChartCoin";
 import { formatPrice } from "../../utils/formatPrice";
 import Loader from "../../components/Loader/Loader";
+import Modal from "../../components/Modal/Modal";
+import Button from "../../components/Button/Button";
 
 const CoinPage = () => {
   const { id } = useParams() as { id: string };

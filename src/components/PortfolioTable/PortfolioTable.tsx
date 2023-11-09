@@ -1,8 +1,8 @@
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { useNavigate } from "react-router-dom";
 import { ICoin } from "../../types/coin";
-import Button from "../../ui/Button/Button";
 import styles from "./PortfolioTable.module.scss";
+import Button from "../Button/Button";
 
 const PortfolioTable = () => {
   const headers = [
